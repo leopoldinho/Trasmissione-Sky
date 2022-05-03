@@ -10,6 +10,3 @@ OP_Misure <- read.csv2("https://openpnrr.openpolis.io/csv/misure.csv", encoding 
 OP_scadenze <- read.csv2("https://openpnrr.openpolis.io/csv/scadenze.csv", encoding = "UTF-8")
 OP_organizzazioni <- read.csv2("https://openpnrr.openpolis.io/csv/organizzazioni.csv", encoding = "UTF-8")
 
-
-
-
