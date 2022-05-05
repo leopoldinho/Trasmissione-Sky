@@ -14,15 +14,14 @@ download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilanci
 
 #Formatto i file dei bilanci del gas
 
+#2021
 Bilancio_nov_21 = read_excel("bilancio_202111-IT.xls",1,range = "A14:AE44") 
 Bilancio_nov_21$GG=as.Date(Bilancio_nov_21$GG <- paste0('2021-11-', Bilancio_nov_21$GG))
-
-
 
 Bilancio_dic_21 = read_excel("bilancio_202112-IT.xls",1,range = "A14:AE44") 
 Bilancio_dic_21$GG=as.Date(Bilancio_dic_21$GG <- paste0('2021-12-', Bilancio_dic_21$GG))
 
-
+#2022
 Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",1,range = "A14:AE44") 
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
   
