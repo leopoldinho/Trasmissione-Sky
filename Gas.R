@@ -3,6 +3,21 @@ library(tidyverse)
 library(googlesheets4)
 library(readxl)
 
+#Credentials
+google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
+
+#Send to Google Spreadsheet
+if (google_auth_credentials != '') {
+  gs4_auth(path = google_auth_credentials, scopes = "https://www.googleapis.com/auth/spreadsheets")
+} else {
+  gs4_auth(email = "raffaele.mastrolonardo@gmail.com")
+}
+Trasmissione_Sky <- Sys.getenv("TRASMISSIONE_SKY_OUTPUT")
+if (Trasmissione_Sky == '') {
+  Trasmissione_Sky <- "https://docs.google.com/spreadsheets/d/13QtJVyJDr8s-sWl0P44LDH394X_2z9ycg161Ptk7ias/edit#gid=0"
+}
+
+
 #Scarico i file dei bilanci del Gas
 
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202101-IT.xls", "bilancio_202101-IT.xls", mode="wb")
@@ -17,10 +32,11 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202110-IT.xls", "bilancio_202110-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202111-IT.xls", "bilancio_202111-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202112-IT.xls", "bilancio_202112-IT.xls", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202201-IT%20(1).xls?raw=true", "Bilancio_202201_14-IT.xls", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202202-IT%20(2).xls?raw=true", "Bilancio_202202_14-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202201-IT.xls", "Bilancio_202201_14-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202_14-IT.xls", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202203-IT_prov.xlsx?raw=true", "Bilancio_202203_14-IT_prov.xls", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202204-IT_prov.xlsx?raw=true", "Bilancio_202204_14-IT_prov.xls", mode="wb")
+#NB: manca scaricamento di MAGGIO 2022
 
 #Formatto i file dei bilanci del gas
 
@@ -59,12 +75,12 @@ Bilancio_Gas_2021 = bind_rows(Bilancio_gen_21,Bilancio_feb_21,Bilancio_mar_21,
                               Bilancio_lug_21,Bilancio_ago_21,Bilancio_set_21,
                               Bilancio_ott_21,Bilancio_nov_21,Bilancio_dic_21
                               )%>% 
-  select(GG, "Import. 2021"=Import., "Entrata Tarvisio 21"="Entrata Tarvisio",
+  select(GG, "2021"=Import., "Entrata Tarvisio 21"="Entrata Tarvisio",
          "Entrata Gela 21"="Entrata Gela","Entrata Gorizia 21"="Entrata Gorizia",
          "Entrata Mazara 21"="Entrata Mazara","Entrata P.Gries 21"="Entrata P.Gries",
          "Entrata Melendugno 21"="Entrata Melendugno","GNL Cavarzere 21"="GNL Cavarzere",
          "GNL Livorno 21"="GNL Livorno","GNL Panigaglia 21"="GNL Panigaglia",
-         "Prod Nazionale 21"="Produzione Nazionale")
+         "Prod Nazionale 21"="Produzione Nazionale","Sistemi di stoccaggio 21"="Sistemi di stoccaggio*")
 
 #Elaboro il conteggio per settimana 2021
 Bilancio_Gas_2021_Set =Bilancio_Gas_2021 %>% 
@@ -89,15 +105,20 @@ Bilancio_marzo_22_prov$GG=as.Date(Bilancio_marzo_22_prov$GG <- paste0('2022-03-'
 Bilancio_aprile_22_prov <- read_xlsx("Bilancio_202204_14-IT_prov.xls",1, range = "A14:AE44")
 Bilancio_aprile_22_prov$GG=as.Date(Bilancio_aprile_22_prov$GG <- paste0('2022-04-', Bilancio_aprile_22_prov$GG))
 
+Bilancio_maggio_22_prov <- read_xlsx("bilancio_202205-IT.xlsx",1, range = "A14:AE44")
+Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-04-', Bilancio_maggio_22_prov$GG))
+
+
+
 #Unisco i file 2022
 Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
-                              Bilancio_marzo_22_prov,Bilancio_aprile_22_prov)%>% 
-  select(GG, "Import. 2022"=Import., "Entrata Tarvisio 22"="Entrata Tarvisio",
+                              Bilancio_marzo_22_prov,Bilancio_aprile_22_prov,Bilancio_maggio_22_prov)%>% 
+  select(GG, "2022"=Import., "Entrata Tarvisio 22"="Entrata Tarvisio",
          "Entrata Gela 22"="Entrata Gela","Entrata Gorizia 22"="Entrata Gorizia",
          "Entrata Mazara 22"="Entrata Mazara","Entrata P.Gries 22"="Entrata P.Gries",
          "Entrata Melendugno 22"="Entrata Melendugno","GNL Cavarzere 22"="GNL Cavarzere",
          "GNL Livorno 22"="GNL Livorno","GNL Panigaglia 22"="GNL Panigaglia",
-         "Prod Nazionale 22"="Produzione Nazionale")
+         "Prod Nazionale 22"="Produzione Nazionale", "Sistemi di stoccaggio 22"="Sistemi di stoccaggio*")
 
 #Elaboro il conteggio per settimana 2022
 Bilancio_Gas_2022_Set =Bilancio_Gas_2022 %>% 
@@ -112,3 +133,6 @@ Bilancio_Gas_2022_Set = Bilancio_Gas_2022_Set %>%
 
 Bilancio_Gas_21_22_Set = left_join(Bilancio_Gas_2021_Set,
                                    Bilancio_Gas_2022_Set,by="Settimana")
+
+
+write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni gas")  
