@@ -60,8 +60,20 @@ Bilancio_Gas_2021 = bind_rows(Bilancio_gen_21,Bilancio_feb_21,Bilancio_mar_21,
                               Bilancio_ott_21,Bilancio_nov_21,Bilancio_dic_21
                               )%>% 
   select(GG, "Import. 2021"=Import., "Entrata Tarvisio 21"="Entrata Tarvisio",
-         "Entrata Gela 21"="Entrata Gela","Entrata Gela 21"="Entrata Gela",
-         "Entrata Gela 21"="Entrata Gela","Entrata Gela 21"="Entrata Gela",)
+         "Entrata Gela 21"="Entrata Gela","Entrata Gorizia 21"="Entrata Gorizia",
+         "Entrata Mazara 21"="Entrata Mazara","Entrata P.Gries 21"="Entrata P.Gries",
+         "Entrata Melendugno 21"="Entrata Melendugno","GNL Cavarzere 21"="GNL Cavarzere",
+         "GNL Livorno 21"="GNL Livorno","GNL Panigaglia 21"="GNL Panigaglia",
+         "Prod Nazionale 21"="Produzione Nazionale")
+
+#Elaboro il conteggio per settimana 2021
+Bilancio_Gas_2021_Set =Bilancio_Gas_2021 %>% 
+  mutate(Settimana = cut.Date(GG, breaks = "1 week", labels = FALSE)) %>% 
+  arrange(GG) %>% select(-GG) %>% mutate_if(is.numeric, round, 1)
+
+Bilancio_Gas_2021_Set = Bilancio_Gas_2021_Set %>%
+  group_by(Settimana) %>% summarise_all(sum)
+
 
 #2022
 Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",1,range = "A14:AE44") 
@@ -79,6 +91,24 @@ Bilancio_aprile_22_prov$GG=as.Date(Bilancio_aprile_22_prov$GG <- paste0('2022-04
 
 #Unisco i file 2022
 Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
-                              Bilancio_marzo_22_prov,Bilancio_aprile_22_prov)
+                              Bilancio_marzo_22_prov,Bilancio_aprile_22_prov)%>% 
+  select(GG, "Import. 2022"=Import., "Entrata Tarvisio 22"="Entrata Tarvisio",
+         "Entrata Gela 22"="Entrata Gela","Entrata Gorizia 22"="Entrata Gorizia",
+         "Entrata Mazara 22"="Entrata Mazara","Entrata P.Gries 22"="Entrata P.Gries",
+         "Entrata Melendugno 22"="Entrata Melendugno","GNL Cavarzere 22"="GNL Cavarzere",
+         "GNL Livorno 22"="GNL Livorno","GNL Panigaglia 22"="GNL Panigaglia",
+         "Prod Nazionale 22"="Produzione Nazionale")
+
+#Elaboro il conteggio per settimana 2022
+Bilancio_Gas_2022_Set =Bilancio_Gas_2022 %>% 
+  mutate(Settimana = cut.Date(GG, breaks = "1 week", labels = FALSE)) %>% 
+  arrange(GG) %>% select(-GG) %>% mutate_if(is.numeric, round, 1)
+
+Bilancio_Gas_2022_Set = Bilancio_Gas_2022_Set %>%
+  group_by(Settimana) %>% summarise_all(sum)
+
 
 #Costruisco i dataset per le viz
+
+Bilancio_Gas_21_22_Set = left_join(Bilancio_Gas_2021_Set,
+                                   Bilancio_Gas_2022_Set,by="Settimana")
