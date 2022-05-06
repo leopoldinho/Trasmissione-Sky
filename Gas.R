@@ -29,7 +29,8 @@ download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilanci
 
 Bilancio_gen_21 = read_excel("bilancio_202101-IT.xls",1,range = "A14:AE44") 
 Bilancio_gen_21$GG=as.Date(Bilancio_gen_21$GG <- paste0('2021-01-', Bilancio_gen_21$GG))
-Bilancio_feb_21 = read_excel("bilancio_202102-IT.xls",1,range = "A14:AE44") 
+Bilancio_feb_21 = read_excel("bilancio_202102-IT.xls",1,range = "A14:AE44")  %>%
+  slice_head(n = 28)
 Bilancio_feb_21$GG=as.Date(Bilancio_feb_21$GG <- paste0('2021-02-', Bilancio_feb_21$GG))
 Bilancio_mar_21 = read_excel("bilancio_202103-IT.xls",1,range = "A14:AE44") 
 Bilancio_mar_21$GG=as.Date(Bilancio_mar_21$GG <- paste0('2021-03-', Bilancio_mar_21$GG))
@@ -58,7 +59,6 @@ Bilancio_Gas_2021 = bind_rows(Bilancio_gen_21,Bilancio_feb_21,Bilancio_mar_21,
                               Bilancio_lug_21,Bilancio_ago_21,Bilancio_sett_21,
                               Bilancio_ott_21,Bilancio_dic_21,Bilancio_nov_21,
                               )
-
 
 #2022
 Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",1,range = "A14:AE44") 
