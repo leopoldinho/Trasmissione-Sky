@@ -178,13 +178,16 @@ Produzione_Elettrica_21_22 = left_join(Prod_Elet_2021,
 
 Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
   mutate(Diff_Termo_Perc=(Termico_22-Termico_21)/Termico_21*100,
-         Diff_Termo=(Termico_22-Termico_21))%>% #AGGIUNGERE DIFF IDROELETTRICO
+         Diff_Termo=(Termico_22-Termico_21),
+         Diff_Idro_Perc=(Idroelettrico_22-Idroelettrico_21)/Idroelettrico_21*100,
+         Diff_Idro=(Idroelettrico_22-Idroelettrico_21))%>% 
   rename("Geotermico 21"="Geotermico_21", "Idroelettrico 21"="Idroelettrico_21",
          "Fotovoltaico 21"="Fotovoltaico_21", "Auto-consumo 21"="Auto-consumo_21",
          "Termoelettrico 21"="Termico_21","Eolico 21"="Eolico_21",
          "Geotermico 22"="Geotermico_22", "Idroelettrico 22"="Idroelettrico_22",
          "Fotovoltaico 22"="Fotovoltaico_22", "Auto-consumo 22"="Auto-consumo_22",
          "Termoelettrico 22"="Termico_22","Eolico 22"="Eolico_22",
-         "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo) 
+         "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo,
+         "Idro Diff %"=Diff_Idro_Perc, "Diff Idro"=Diff_Idro) 
 
 write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
