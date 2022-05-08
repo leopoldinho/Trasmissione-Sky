@@ -188,6 +188,7 @@ Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
          "Fotovoltaico 22"="Fotovoltaico_22", "Auto-consumo 22"="Auto-consumo_22",
          "Termoelettrico 22"="Termico_22","Eolico 22"="Eolico_22",
          "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo,
-         "Idro Diff %"=Diff_Idro_Perc, "Diff Idro"=Diff_Idro) 
+         "Idro Diff %"=Diff_Idro_Perc, "Diff Idro"=Diff_Idro) %>% 
+  mutate_if(is.numeric, round, 1)
 
 write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
