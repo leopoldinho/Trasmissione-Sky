@@ -140,6 +140,7 @@ write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni
 #Dati energia elettrica
 #Fonte: https://www.terna.it/it/sistema-elettrico/transparency-report/download-center
 
+#Formatto i dati 2021
 Prod_Elet_2021 = read_xlsx("data (1).xlsx",1) 
 Prod_Elet_2021$Date = as.Date(Prod_Elet_2021$Date) 
 Prod_Elet_2021 = Prod_Elet_2021 %>% 
@@ -148,8 +149,42 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
   mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
   arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
   group_by(Settimana) %>% summarise_all(sum) %>%
-  slice_head(n = 53)
+  slice_head(n = 53) %>%
+  select(-"NA", ) %>%
+  rename("Geotermico_21"=Geothermal, "Idroelettrico_21"=Hydro,
+         "Fotovoltaico_21"=Photovoltaic, "Auto-consumo_21"="Self-consumption",
+         "Termico_21"=Thermal,"Eolico_21"=Wind) 
   
 
-
+#Formatto i dati 2022
 Prod_Elet_2022 = read_xlsx("data (2).xlsx",1) 
+Prod_Elet_2022$Date = as.Date(Prod_Elet_2022$Date) 
+Prod_Elet_2022 = Prod_Elet_2022 %>% 
+  pivot_wider(names_from="Primary Source", 
+              values_from="Actual Generation [GWh]", values_fn = sum) %>% 
+  mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
+  arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
+  group_by(Settimana) %>% summarise_all(sum) %>%
+  slice_head(n = 19)%>%
+  select(-"NA")%>%
+  rename("Geotermico_22"=Geothermal, "Idroelettrico_22"=Hydro,
+         "Fotovoltaico_22"=Photovoltaic, "Auto-consumo_22"="Self-consumption",
+         "Termico_22"=Thermal,"Eolico_22"=Wind)
+
+#Costruisco i dataset per le viz
+
+Produzione_Elettrica_21_22 = left_join(Prod_Elet_2021,
+                                   Prod_Elet_2022,by="Settimana")
+
+Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
+  mutate(Diff_Termo_Perc=(Termico_22-Termico_21)/Termico_21*100,
+         Diff_Termo=(Termico_22-Termico_21))%>% #AGGIUNGERE DIFF IDROELETTRICO
+  rename("Geotermico 21"="Geotermico_21", "Idroelettrico 21"="Idroelettrico_21",
+         "Fotovoltaico 21"="Fotovoltaico_21", "Auto-consumo 21"="Auto-consumo_21",
+         "Termoelettrico 21"="Termico_21","Eolico 21"="Eolico_21",
+         "Geotermico 22"="Geotermico_22", "Idroelettrico 22"="Idroelettrico_22",
+         "Fotovoltaico 22"="Fotovoltaico_22", "Auto-consumo 22"="Auto-consumo_22",
+         "Termoelettrico 22"="Termico_22","Eolico 22"="Eolico_22",
+         "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo) 
+
+write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
