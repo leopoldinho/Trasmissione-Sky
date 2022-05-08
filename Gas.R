@@ -136,3 +136,20 @@ Bilancio_Gas_21_22_Set = left_join(Bilancio_Gas_2021_Set,
 
 
 write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni gas")  
+
+#Dati energia elettrica
+#Fonte: https://www.terna.it/it/sistema-elettrico/transparency-report/download-center
+
+Prod_Elet_2021 = read_xlsx("data (1).xlsx",1) 
+Prod_Elet_2021$Date = as.Date(Prod_Elet_2021$Date) 
+Prod_Elet_2021 = Prod_Elet_2021 %>% 
+  pivot_wider(names_from="Primary Source", 
+              values_from="Actual Generation [GWh]", values_fn = sum) %>% 
+  mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
+  arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
+  group_by(Settimana) %>% summarise_all(sum) %>%
+  slice_head(n = 53)
+  
+
+
+Prod_Elet_2022 = read_xlsx("data (2).xlsx",1) 
