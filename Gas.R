@@ -36,7 +36,9 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202_14-IT.xls", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202203-IT_prov.xlsx?raw=true", "Bilancio_202203_14-IT_prov.xls", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202204-IT_prov.xlsx?raw=true", "Bilancio_202204_14-IT_prov.xls", mode="wb")
-#NB: manca scaricamento di MAGGIO 2022
+
+#NB: manca scaricamento di MAGGIO 2022 da scaricare qui: https://jarvis.snam.it/public-data?lang=it
+
 
 #Formatto i file dei bilanci del gas
 
