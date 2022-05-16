@@ -34,7 +34,7 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202112-IT.xls", "bilancio_202112-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202201-IT.xls", "Bilancio_202201_14-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202_14-IT.xls", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202203-IT_prov.xlsx?raw=true", "Bilancio_202203_14-IT_prov.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202203-IT.xls", "bilancio_202203-IT.xls", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202204-IT_prov.xlsx?raw=true", "Bilancio_202204_14-IT_prov.xls", mode="wb")
 
 #NB: manca scaricamento di MAGGIO 2022 da scaricare qui: https://jarvis.snam.it/public-data?lang=it
@@ -101,14 +101,14 @@ Bilancio_febbraio_22 = read_xls("Bilancio_202202_14-IT.xls",1, range = "A14:AE44
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22_prov = read_xlsx("Bilancio_202203_14-IT_prov.xls",1, range = "A14:AE44")
+Bilancio_marzo_22_prov = read_xls("bilancio_202203-IT.xls",1, range = "A14:AE44")
 Bilancio_marzo_22_prov$GG=as.Date(Bilancio_marzo_22_prov$GG <- paste0('2022-03-', Bilancio_marzo_22_prov$GG))
 
 Bilancio_aprile_22_prov <- read_xlsx("Bilancio_202204_14-IT_prov.xls",1, range = "A14:AE44")
 Bilancio_aprile_22_prov$GG=as.Date(Bilancio_aprile_22_prov$GG <- paste0('2022-04-', Bilancio_aprile_22_prov$GG))
 
 Bilancio_maggio_22_prov <- read_xlsx("bilancio_202205-IT.xlsx",1, range = "A14:AE44")
-Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-04-', Bilancio_maggio_22_prov$GG))
+Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05-', Bilancio_maggio_22_prov$GG))
 
 
 
@@ -130,6 +130,7 @@ Bilancio_Gas_2022_Set =Bilancio_Gas_2022 %>%
 Bilancio_Gas_2022_Set = Bilancio_Gas_2022_Set %>%
   group_by(Settimana) %>% summarise_all(sum)
 
+write.csv2(Bilancio_Gas_2022_Set, "Gas_2022.csv")
 
 #Costruisco i dataset per le viz
 
@@ -159,7 +160,7 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
   
 
 #Formatto i dati 2022
-Prod_Elet_2022 = read_xlsx("data (2).xlsx",1) 
+Prod_Elet_2022 = read_xlsx("data (3).xlsx",1) 
 Prod_Elet_2022$Date = as.Date(Prod_Elet_2022$Date) 
 Prod_Elet_2022 = Prod_Elet_2022 %>% 
   pivot_wider(names_from="Primary Source", 
