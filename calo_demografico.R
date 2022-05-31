@@ -1,3 +1,4 @@
+#Libraries
 library(devtools) 
 library(tidyverse)
 library(googlesheets4)
@@ -6,25 +7,50 @@ library(eurostat)
 library(httr)
 library(jsonlite)
 library(R.utils)
+library(sf)
 
-temp <- tempfile()
-download.file("https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/tgs00100.tsv.gz",temp)
-data <- read_tsv(gunzip(temp, "tgs00100.tsv"))
-unlink(temp)
 
-prova = gunzip("https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/tgs00100.tsv.gz")
+#Credentials
+google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
 
-prova_1 = read_tsv(prova)
+#Send to Google Spreadsheet
+if (google_auth_credentials != '') {
+  gs4_auth(path = google_auth_credentials, scopes = "https://www.googleapis.com/auth/spreadsheets")
+} else {
+  gs4_auth(email = "raffaele.mastrolonardo@gmail.com")
+}
+Trasmissione_Sky <- Sys.getenv("TRASMISSIONE_SKY_OUTPUT")
+if (Trasmissione_Sky == '') {
+  Trasmissione_Sky <- "https://docs.google.com/spreadsheets/d/13QtJVyJDr8s-sWl0P44LDH394X_2z9ycg161Ptk7ias/edit#gid=0"
+}
 
-#cerco dati su Eurostat
-fertility_ue_index = search_eurostat("fertility")
+
 
 #Scarico i dati
 fertilita_ue =read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/tps00199_page_linear_feritlita_09_20.csv")
+eta_media_madri_ue_nuts3=get_eurostat("demo_r_find3")
+
+fertilita_ue_isto = fertilita_ue %>%
+  filter(TIME_PERIOD=="2020")
+
+eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
+  filter(time == max(time)) %>%
+  rename(NUTS_ID=geo)
+
+#Dati geografici
+geodata = get_eurostat_geospatial(
+  output_class = "sf",
+  resolution = "60",
+  nuts_level = 3,
+  year = 2021
+)
+
+eta_media_madri_ue_nuts3_mappa=left_join(eta_media_madri_ue_nuts3, geodata, by="NUTS_ID")
+
+
 proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
 proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
 
-gzfi
-# API INAIL PROVE
-prova= GET("https://dati.inail.it/api/OpenData/DatiConCadenzaSemestraleInfortuni")
-rawToChar(prova$content)
+
+
+write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
