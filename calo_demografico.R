@@ -8,6 +8,9 @@ library(httr)
 library(jsonlite)
 library(R.utils)
 library(sf)
+library(sp)
+
+
 
 
 #Credentials
@@ -30,8 +33,10 @@ geodata = get_eurostat_geospatial(
   output_class = "sf",
   resolution = "60",
   nuts_level = 3,
+  crs = 4326,
   year = 2021
 )
+
 #Scarico i dati
 fertilita_ue =read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/tps00199_page_linear_feritlita_09_20.csv")
 eta_media_madri_ue_nuts3=get_eurostat("demo_r_find3")
@@ -45,7 +50,11 @@ eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
   filter(time == max(time)) %>%
   rename(NUTS_ID=geo)
 
-eta_media_madri_ue_nuts3_mappa=left_join(eta_media_madri_ue_nuts3, geodata, by="NUTS_ID")
+eta_media_madri_ue_nuts3_mappa=inner_join(geodata,eta_media_madri_ue_nuts3, by="NUTS_ID")
+
+##NB: qui si potrebbe provare a scrivere un geojson direttamente
+
+write.csv(eta_media_madri_ue_nuts3_mappa, "eta_media.csv")
 
 #proiezioni fertilita
 proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
