@@ -9,6 +9,7 @@ library(jsonlite)
 library(R.utils)
 library(sf)
 library(sp)
+library(geojsonR)
 
 
 
@@ -53,6 +54,7 @@ eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
 eta_media_madri_ue_nuts3_mappa=inner_join(geodata,eta_media_madri_ue_nuts3, by="NUTS_ID")
 
 ##NB: qui si potrebbe provare a scrivere un geojson direttamente
+
 
 write.csv(eta_media_madri_ue_nuts3_mappa, "eta_media.csv")
 
