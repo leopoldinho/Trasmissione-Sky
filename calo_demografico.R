@@ -25,18 +25,6 @@ if (Trasmissione_Sky == '') {
 }
 
 
-
-#Scarico i dati
-fertilita_ue =read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/tps00199_page_linear_feritlita_09_20.csv")
-eta_media_madri_ue_nuts3=get_eurostat("demo_r_find3")
-
-fertilita_ue_isto = fertilita_ue %>%
-  filter(TIME_PERIOD=="2020")
-
-eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
-  filter(time == max(time)) %>%
-  rename(NUTS_ID=geo)
-
 #Dati geografici
 geodata = get_eurostat_geospatial(
   output_class = "sf",
@@ -44,13 +32,26 @@ geodata = get_eurostat_geospatial(
   nuts_level = 3,
   year = 2021
 )
+#Scarico i dati
+fertilita_ue =read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/tps00199_page_linear_feritlita_09_20.csv")
+eta_media_madri_ue_nuts3=get_eurostat("demo_r_find3")
+
+#Istogramma fertilita
+fertilita_ue_isto = fertilita_ue %>%
+  filter(TIME_PERIOD=="2020")
+
+#mappa eta media madri province
+eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
+  filter(time == max(time)) %>%
+  rename(NUTS_ID=geo)
 
 eta_media_madri_ue_nuts3_mappa=left_join(eta_media_madri_ue_nuts3, geodata, by="NUTS_ID")
 
-
+#proiezioni fertilita
 proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
 proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
 
 
-
 write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
+
+write_sheet(eta_media_madri_ue_nuts3_mappa, ss = Trasmissione_Sky, sheet = "Eta_media_Mappa")
