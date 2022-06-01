@@ -41,8 +41,19 @@ geodata = get_eurostat_geospatial(
 )
 
 
+geodata_nuts_2 = get_eurostat_geospatial(
+  output_class = "sf",
+  resolution = "20",
+  nuts_level = 2,
+  crs = 4326,
+  year = 2021
+)
+
+
 #Scarico i dati
 natalita_ue_nuts3=get_eurostat("demo_r_find3") 
+
+
 
 #Istogramma fertilita
 fertilita_ue_isto = fertilita_ue %>%
@@ -59,6 +70,17 @@ fertilita_ue_nuts3_mappa=left_join(geodata, fertilita_ue_nuts3,
 
 fertilita_ue_nuts3_mappa = geojson_write(fertilita_ue_nuts3_mappa, file="mappa_fertilita.geojson")
 
+#mappa eta' media madri e fertilita' regioni
+
+fertilita_ue_nuts3=natalita_ue_nuts3 %>%
+  group_by(geo) %>%
+  filter(time == max(time), indic_de=="TOTFERRT") %>%
+  rename(NUTS_ID=geo)
+
+fertilita_ue_nuts2_mappa=left_join(geodata_nuts_2, fertilita_ue_nuts3,
+                                   by="NUTS_ID")
+
+fertilita_ue_nuts2_mappa = geojson_write(fertilita_ue_nuts2_mappa, file="mappa_fertilita.geojson")
 
 
 #proiezioni fertilita
