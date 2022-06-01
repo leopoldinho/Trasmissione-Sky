@@ -10,6 +10,8 @@ library(R.utils)
 library(sf)
 library(sp)
 library(geojsonR)
+library(geojsonio)
+
 
 
 
@@ -32,36 +34,36 @@ if (Trasmissione_Sky == '') {
 #Dati geografici
 geodata = get_eurostat_geospatial(
   output_class = "sf",
-  resolution = "60",
+  resolution = "20",
   nuts_level = 3,
   crs = 4326,
   year = 2021
 )
 
+
 #Scarico i dati
-fertilita_ue =read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/tps00199_page_linear_feritlita_09_20.csv")
-eta_media_madri_ue_nuts3=get_eurostat("demo_r_find3")
+natalita_ue_nuts3=get_eurostat("demo_r_find3") 
 
 #Istogramma fertilita
 fertilita_ue_isto = fertilita_ue %>%
   filter(TIME_PERIOD=="2020")
 
-#mappa eta media madri province
-eta_media_madri_ue_nuts3=eta_media_madri_ue_nuts3 %>%
-  filter(time == max(time)) %>%
+#mappa eta' media madri e fertilita' province
+fertilita_ue_nuts3=natalita_ue_nuts3 %>%
+  group_by(geo) %>%
+  filter(time == max(time), indic_de=="TOTFERRT") %>%
   rename(NUTS_ID=geo)
 
-eta_media_madri_ue_nuts3_mappa=inner_join(geodata,eta_media_madri_ue_nuts3, by="NUTS_ID")
+fertilita_ue_nuts3_mappa=left_join(geodata, fertilita_ue_nuts3,
+                                         by="NUTS_ID")
 
-##NB: qui si potrebbe provare a scrivere un geojson direttamente
+fertilita_ue_nuts3_mappa = geojson_write(fertilita_ue_nuts3_mappa, file="mappa_fertilita.geojson")
 
 
-write.csv(eta_media_madri_ue_nuts3_mappa, "eta_media.csv")
 
 #proiezioni fertilita
 proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
 proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
-
 
 write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
 
