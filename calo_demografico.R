@@ -15,7 +15,6 @@ library(geojsonio)
 
 
 
-
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
 
@@ -31,7 +30,7 @@ if (Trasmissione_Sky == '') {
 }
 
 
-#Dati geografici
+#Dati geografici province e regioni Ue
 geodata = get_eurostat_geospatial(
   output_class = "sf",
   resolution = "20",
@@ -50,14 +49,19 @@ geodata_nuts_2 = get_eurostat_geospatial(
 )
 
 
-#Scarico i dati
+#Scarico i dati sulla fertilità
 natalita_ue_nuts3=get_eurostat("demo_r_find3") 
 
+#Fertilita Paesi
+fertilita_ue_isto = natalita_ue_nuts3 %>%
+  filter(str_length(geo) == 2) %>%
+  filter(time=="2020-01-01", indic_de=="TOTFERRT")
 
+fertilita_ue_andamento = natalita_ue_nuts3 %>%
+  filter(str_length(geo) == 2) %>%
+  filter(indic_de=="TOTFERRT")%>%
+  pivot_wider(names_from = geo, values_from = values)
 
-#Istogramma fertilita
-fertilita_ue_isto = fertilita_ue %>%
-  filter(TIME_PERIOD=="2020")
 
 #mappa eta' media madri e fertilita' province
 fertilita_ue_nuts3=natalita_ue_nuts3 %>%
@@ -88,5 +92,7 @@ proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
 proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
 
 write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
+write_sheet(fertilita_ue_andamento, ss = Trasmissione_Sky, sheet = "Fertilita_Ue_andamento")
 
-write_sheet(eta_media_madri_ue_nuts3_mappa, ss = Trasmissione_Sky, sheet = "Eta_media_Mappa")
+
+
