@@ -60,7 +60,8 @@ fertilita_ue_isto = natalita_ue_nuts3 %>%
 fertilita_ue_andamento = natalita_ue_nuts3 %>%
   filter(str_length(geo) == 2) %>%
   filter(indic_de=="TOTFERRT")%>%
-  pivot_wider(names_from = geo, values_from = values)
+  pivot_wider(names_from = geo, values_from = values)%>%
+  arrange(time)
 
 
 #mappa eta' media madri e fertilita' province
