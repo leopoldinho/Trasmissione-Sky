@@ -73,7 +73,13 @@ fertilita_ue_nuts3=natalita_ue_nuts3 %>%
 fertilita_ue_nuts3_mappa=left_join(geodata, fertilita_ue_nuts3,
                                          by="NUTS_ID")
 
+fertilita_IT_nuts3_mappa = fertilita_ue_nuts3_mappa %>%
+  filter(CNTR_CODE=="IT")
+
 fertilita_ue_nuts3_mappa = geojson_write(fertilita_ue_nuts3_mappa, file="mappa_fertilita.geojson")
+
+fertilita_IT_nuts3_mappa = geojson_write(fertilita_IT_nuts3_mappa, file="mappa_fertilita_IT.geojson")
+
 
 #mappa eta' media madri e fertilita' regioni
 
