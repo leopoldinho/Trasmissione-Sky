@@ -39,11 +39,18 @@ abruzzo_semest$DataMorte =
 #unisco i dataset e calcolo andamento mensile
 abruzzo_morti_lavoro = bind_rows(abruzzo_semest,abruzzo_mese) %>%
   mutate(decessi=as.numeric(1))%>% 
+  pivot_wider(names_from = Genere, values_from = decessi, values_fn=mean) 
+
+abruzzo_morti_lavoro$M= abruzzo_morti_lavoro$M %>%replace_na(0)
+abruzzo_morti_lavoro$F= abruzzo_morti_lavoro$F %>%replace_na(0)
+
+abruzzo_morti_lavoro= abruzzo_morti_lavoro %>%
+  mutate(Tot=M+F) %>%
   group_by(month = lubridate::floor_date(DataMorte, "month")) %>%
-  summarize(decessi_lavoro = sum(decessi)) %>%
+  summarize(decessi_M=sum(M), decessi_F=sum(F), decessi_lavoro = sum(Tot)) %>%
   rename(mese=month)
 
-#nb: provare a distinguera tra maschi e femmine
+
 
 
 #API
