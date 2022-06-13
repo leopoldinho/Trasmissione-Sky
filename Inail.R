@@ -56,11 +56,13 @@ for (url in url_mese) {
   download.file(url, destfile = basename(url))
 } #scarico i file
 
-my_files <- list.files(pattern = "\\.zip$") #infilo i file in una lista
+my_files = list.files(pattern = "\\.zip$") #infilo i file in una lista
 
-my_data <- lapply(my_files, unzip)
+my_data = lapply(my_files, unzip)
 
-#RICOMINCIARE DA QUI
+#RICOMINCIARE DA QUI: applicare una funzione ai cvs nella lista
+
+
 
 #Sistemo il dataset ultimi due anni (compreso quello in corso)
 abruzzo_mese = read.csv2(unzip( "abruzzo.zip")) %>%
