@@ -60,6 +60,7 @@ my_files = list.files(pattern = "\\.zip$") #infilo i file in una lista
 
 my_data = lapply(my_files, unzip)
 
+
 #RICOMINCIARE DA QUI: applicare una funzione ai cvs nella lista
 
 
