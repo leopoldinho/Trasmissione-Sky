@@ -1,7 +1,4 @@
 #Libraries
-
-
-
 library(devtools) 
 library(tidyverse)
 library(googlesheets4)
@@ -9,11 +6,68 @@ library(httr)
 library(jsonlite)
 library(lubridate)
 
-#Scarico dati Abruzzo
+#Scarico dati Abruzzo e basilicata
+
+url_mese = c("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniAbruzzo_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniBasilicata_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniCalabria_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniCampania_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniEmiliaRomagna_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniFriuliVeneziaGiulia_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniLazio_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniLiguria_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniLombardia_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniMarche_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniMolise_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniPiemonte_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniPuglia_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniSardegna_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniSicilia_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniToscana_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniTrentinoAltoAdige_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniUmbria_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniValledAosta_csv.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniVeneto.zip",
+         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniAltro_csv.zip"
+         )
+         
+url_semestre = c("https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniAbruzzo_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniBasilicata_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniCalabria_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniCampania_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniEmiliaRomagna_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniFriuliVeneziaGiulia_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniLazio_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniLiguria_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniLombardia_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniMarche_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniMolise_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniPiemonte_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniPuglia_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniSardegna_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniSicilia_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniToscana_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniTrentinoAltoAdige_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniUmbria_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniValledAosta_csv.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniVeneto.zip",
+                 "https://dati.inail.it/opendata/downloads/daticoncadenzaSemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniAltro_csv.zip"
+)
+
+
 download.file("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniAbruzzo_csv.zip",
               "abruzzo.zip")
+download.file("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniBasilicata_csv.zip",
+              "basilicata.zip")
+
 download.file("https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniAbruzzo_csv.zip",
               "abruzzo_sem.zip")
+
+download.file("https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniBasilicata_csv.zip",
+              "basilicata_sem.zip")
+
+
+my_files <- list.files(path = "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniAbruzzo_csv.zip")
 
 
 #Sistemo il dataset ultimi due anni (compreso quello in corso)
@@ -50,7 +104,7 @@ abruzzo_morti_lavoro= abruzzo_morti_lavoro %>%
   summarize(decessi_M=sum(M), decessi_F=sum(F), decessi_lavoro = sum(Tot)) %>%
   rename(mese=month)
 
-
+ 
 
 
 #API
