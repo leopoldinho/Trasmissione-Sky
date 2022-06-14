@@ -28,7 +28,6 @@ url_mese = c("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfo
          "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniUmbria_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniValledAosta_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniVeneto_csv.zip",
-         "https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfortuni/zip/DatiConCadenzaMensileInfortuniAltro_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniAbruzzo_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniBasilicata_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniCalabria_csv.zip",
@@ -49,41 +48,32 @@ url_mese = c("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfo
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniUmbria_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniValledAosta_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniVeneto_csv.zip",
-         "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniAltro_csv.zip"
 ) 
 
 for (url in url_mese) {
   download.file(url, destfile = basename(url))
 } #scarico i file
 
-my_files = list.files(pattern = "\\.zip$") #infilo i file in una lista
+my_files = list.files(pattern = "\\_csv.zip$") #infilo i file in una lista
 
-my_data = lapply(my_files, unzip)
+my_files = lapply(my_files, unzip) #estraggo i file
 
+my_data = lapply(my_files, read.csv2) # li leggo come CSV
 
-#RICOMINCIARE DA QUI: applicare una funzione ai cvs nella lista
+my_data_selecton = lapply(my_data, function(x) x%>% select(DataAccadimento, 
+                                                            DataMorte, Genere, 
+                                                            Eta, LuogoNascita, 
+                                                            SettoreAttivitaEconomica)) #selezion le variabili che mi interessano
 
+my_data_selection_new = bind_rows(my_data_selecton) %>%
+  filter(DataMorte !="") #unisco i dataset in un unico dataset e considero solo i morti
 
+my_data_selection_new$DataAccadimento = 
+  as.Date(my_data_selection_new$DataAccadimento,format ="%d/%m/%Y")
+my_data_selection_new$DataMorte = 
+  as.Date(my_data_selection_new$DataMorte,format ="%d/%m/%Y")
 
-#Sistemo il dataset ultimi due anni (compreso quello in corso)
-abruzzo_mese = read.csv2(unzip( "abruzzo.zip")) %>%
-  select(DataAccadimento, DataMorte, Genere, Eta, LuogoNascita, SettoreAttivitaEconomica)%>%
-  filter(DataMorte !="")
-
-abruzzo_mese$DataAccadimento = 
-  as.Date(abruzzo_mese$DataAccadimento,format ="%d/%m/%Y")
-abruzzo_mese$DataMorte = 
-  as.Date(abruzzo_mese$DataMorte,format ="%d/%m/%Y")
-
-#Sistemo il dataset 6 anni precedenti
-abruzzo_semest = read.csv2(unzip( "abruzzo_sem.zip")) %>%
-  select(DataAccadimento, DataMorte, Genere, Eta, LuogoNascita, SettoreAttivitaEconomica)%>%
-  filter(DataMorte !="")
-
-abruzzo_semest$DataAccadimento = 
-  as.Date(abruzzo_semest$DataAccadimento,format ="%d/%m/%Y")
-abruzzo_semest$DataMorte = 
-  as.Date(abruzzo_semest$DataMorte,format ="%d/%m/%Y")
+#Continuare da qui
 
 #unisco i dataset e calcolo andamento mensile
 abruzzo_morti_lavoro = bind_rows(abruzzo_semest,abruzzo_mese) %>%
@@ -105,3 +95,7 @@ abruzzo_morti_lavoro= abruzzo_morti_lavoro %>%
 #API
 res = GET("https://dati.inail.it/api/OpenData/DatiConCadenzaSemestraleInfortuni",
           query = list(Regione = "Abruzzo", AnnoAccadimento="2021",MeseAccadimento="7" ))
+
+#non ho capito se usare o no questi
+names(my_data) <- gsub("\\.csv$", "", my_files)
+names(my_data) <- stringr::str_replace(my_files, pattern = ".csv", replacement = "")
