@@ -32,12 +32,17 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202110-IT.xls", "bilancio_202110-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202111-IT.xls", "bilancio_202111-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2021/bilancio_202112-IT.xls", "bilancio_202112-IT.xls", mode="wb")
-download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202201-IT.xls", "Bilancio_202201_14-IT.xls", mode="wb")
-download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202_14-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202201-IT.xls", "Bilancio_202201-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202203-IT.xls", "bilancio_202203-IT.xls", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202204-IT_prov.xlsx?raw=true", "Bilancio_202204_14-IT_prov.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202204-IT.xls", "bilancio_202204-IT.xls", mode="wb")
+#provvisori
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202205-IT.xlsx?raw=true", "Bilancio_202205_14-IT_prov.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202206-IT.xlsx?raw=true", "Bilancio_202206_14-IT_prov.xlsx", mode="wb")
 
-#NB: manca scaricamento di MAGGIO 2022 da scaricare qui: https://jarvis.snam.it/public-data?lang=it
+
+
+#NB:  https://jarvis.snam.it/public-data?lang=it
 
 
 #Formatto i file dei bilanci del gas
@@ -101,20 +106,24 @@ Bilancio_febbraio_22 = read_xls("Bilancio_202202_14-IT.xls",1, range = "A14:AE44
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22_prov = read_xls("bilancio_202203-IT.xls",1, range = "A14:AE44")
-Bilancio_marzo_22_prov$GG=as.Date(Bilancio_marzo_22_prov$GG <- paste0('2022-03-', Bilancio_marzo_22_prov$GG))
+Bilancio_marzo_22 = read_xls("bilancio_202203-IT.xls",1, range = "A14:AE44")
+Bilancio_marzo_22$GG=as.Date(Bilancio_marzo_22$GG <- paste0('2022-03-', Bilancio_marzo_22$GG))
 
-Bilancio_aprile_22_prov <- read_xlsx("Bilancio_202204_14-IT_prov.xls",1, range = "A14:AE44")
-Bilancio_aprile_22_prov$GG=as.Date(Bilancio_aprile_22_prov$GG <- paste0('2022-04-', Bilancio_aprile_22_prov$GG))
+Bilancio_aprile_22 <- read_xls("Bilancio_202204-IT.xls",1, range = "A14:AE44")
+Bilancio_aprile_22$GG=as.Date(Bilancio_aprile_22$GG <- paste0('2022-04-', Bilancio_aprile_22$GG))
 
-Bilancio_maggio_22_prov <- read_xlsx("bilancio_202205-IT.xlsx",1, range = "A14:AE44")
+Bilancio_maggio_22_prov <- read_xlsx("Bilancio_202205_14-IT_prov.xlsx",1, range = "A14:AE44")
 Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05-', Bilancio_maggio_22_prov$GG))
+
+Bilancio_giugno_22_prov <- read_xlsx("Bilancio_202206_14-IT_prov.xlsx",1, range = "A14:AE44")
+Bilancio_giugno_22_prov$GG=as.Date(Bilancio_giugno_22_prov$GG <- paste0('2022-06-', Bilancio_giugno_22_prov$GG))
 
 
 
 #Unisco i file 2022
 Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
-                              Bilancio_marzo_22_prov,Bilancio_aprile_22_prov,Bilancio_maggio_22_prov)%>% 
+                              Bilancio_marzo_22,Bilancio_aprile_22,Bilancio_maggio_22_prov,
+                              Bilancio_giugno_22_prov)%>% 
   select(GG, "2022"=Import., "Entrata Tarvisio 22"="Entrata Tarvisio",
          "Entrata Gela 22"="Entrata Gela","Entrata Gorizia 22"="Entrata Gorizia",
          "Entrata Mazara 22"="Entrata Mazara","Entrata P.Gries 22"="Entrata P.Gries",
