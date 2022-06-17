@@ -47,8 +47,8 @@ url_mese = c("https://dati.inail.it/opendata/downloads/daticoncadenzamensileinfo
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniTrentinoAltoAdige_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniUmbria_csv.zip",
          "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniValledAosta_csv.zip",
-         "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniVeneto_csv.zip",
-) 
+         "https://dati.inail.it/opendata/downloads/daticoncadenzasemestraleinfortuni/zip/DatiConCadenzaSemestraleInfortuniVeneto_csv.zip"
+)
 
 for (url in url_mese) {
   download.file(url, destfile = basename(url))
@@ -73,17 +73,14 @@ my_data_selection_new$DataAccadimento =
 my_data_selection_new$DataMorte = 
   as.Date(my_data_selection_new$DataMorte,format ="%d/%m/%Y")
 
-#Continuare da qui
-
-#unisco i dataset e calcolo andamento mensile
-abruzzo_morti_lavoro = bind_rows(abruzzo_semest,abruzzo_mese) %>%
+my_data_selection_new = my_data_selection_new %>%
   mutate(decessi=as.numeric(1))%>% 
   pivot_wider(names_from = Genere, values_from = decessi, values_fn=mean) 
 
-abruzzo_morti_lavoro$M= abruzzo_morti_lavoro$M %>%replace_na(0)
-abruzzo_morti_lavoro$F= abruzzo_morti_lavoro$F %>%replace_na(0)
+my_data_selection_new$M= my_data_selection_new$M %>%replace_na(0)
+my_data_selection_new$F= my_data_selection_new$F %>%replace_na(0)
 
-abruzzo_morti_lavoro= abruzzo_morti_lavoro %>%
+my_data_selection_new= my_data_selection_new %>%
   mutate(Tot=M+F) %>%
   group_by(month = lubridate::floor_date(DataMorte, "month")) %>%
   summarize(decessi_M=sum(M), decessi_F=sum(F), decessi_lavoro = sum(Tot)) %>%
