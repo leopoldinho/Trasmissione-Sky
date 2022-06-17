@@ -86,7 +86,7 @@ my_data_selection_new= my_data_selection_new %>%
   summarize(decessi_M=sum(M), decessi_F=sum(F), decessi_lavoro = sum(Tot)) %>%
   rename(mese=month)
 
- 
+write_sheet(my_data_selection_new, ss = Trasmissione_Sky, sheet = "Morti_lavoro")
 
 
 #API
