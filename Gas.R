@@ -2,6 +2,8 @@ library(devtools)
 library(tidyverse)
 library(googlesheets4)
 library(readxl)
+library(lubridate)
+
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -50,7 +52,7 @@ download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilanci
 #2021
 
 
-Bilancio_gen_21 = read_excel("bilancio_202101-IT.xls",1,range = "A14:AE44") 
+Bilancio_gen_21 = read_xls("bilancio_202101-IT.xls",1,range = "A14:AE44") 
 Bilancio_gen_21$GG=as.Date(Bilancio_gen_21$GG <- paste0('2021-01-', Bilancio_gen_21$GG))
 Bilancio_feb_21 = read_excel("bilancio_202102-IT.xls",1,range = "A14:AE44")  %>%
   slice_head(n = 28)
@@ -153,8 +155,12 @@ write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni
 #Fonte: https://www.terna.it/it/sistema-elettrico/transparency-report/download-center
 
 #Formatto i dati 2021
-Prod_Elet_2021 = read_xlsx("data (1).xlsx",1) 
-Prod_Elet_2021$Date = as.Date(Prod_Elet_2021$Date) 
+Prod_Elet_2021 = read_xlsx("data_energia_elettrica_21.xlsx",1) %>% 
+  slice(1:(n()-2)) %>%
+  mutate(Giorno=yday(Date))
+
+Prod_Elet_2021$Date = as.Date (Prod_Elet_2021$Date)
+
 Prod_Elet_2021 = Prod_Elet_2021 %>% 
   pivot_wider(names_from="Primary Source", 
               values_from="Actual Generation [GWh]", values_fn = sum) %>% 
@@ -162,26 +168,30 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
   arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
   group_by(Settimana) %>% summarise_all(sum) %>%
   slice_head(n = 53) %>%
-  select(-"NA", ) %>%
   rename("Geotermico_21"=Geothermal, "Idroelettrico_21"=Hydro,
          "Fotovoltaico_21"=Photovoltaic, "Auto-consumo_21"="Self-consumption",
-         "Termico_21"=Thermal,"Eolico_21"=Wind) 
+         "Termico_21"=Thermal,"Eolico_21"=Wind) %>%
+  select(-Giorno)
   
 
 #Formatto i dati 2022
-Prod_Elet_2022 = read_xlsx("data (5).xlsx",1) 
-Prod_Elet_2022$Date = as.Date(Prod_Elet_2022$Date) 
+Prod_Elet_2022 = read_xlsx("data_energia_elettrica_22.xlsx",1) %>% 
+  slice(1:(n()-2)) %>%
+  mutate(Giorno=yday(Date))
+
+Prod_Elet_2022$Date = as.Date (Prod_Elet_2022$Date)
+
 Prod_Elet_2022 = Prod_Elet_2022 %>% 
   pivot_wider(names_from="Primary Source", 
               values_from="Actual Generation [GWh]", values_fn = sum) %>% 
   mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
   arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
   group_by(Settimana) %>% summarise_all(sum) %>%
-  slice_head(n = 19)%>%
-  select(-"NA")%>%
+  slice_head(n = 53) %>%
   rename("Geotermico_22"=Geothermal, "Idroelettrico_22"=Hydro,
          "Fotovoltaico_22"=Photovoltaic, "Auto-consumo_22"="Self-consumption",
-         "Termico_22"=Thermal,"Eolico_22"=Wind)
+         "Termico_22"=Thermal,"Eolico_22"=Wind) %>%
+  select(-Giorno)
 
 #Costruisco i dataset per le viz
 
