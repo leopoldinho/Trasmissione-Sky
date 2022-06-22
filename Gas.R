@@ -47,35 +47,35 @@ download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilanci
 #NB:  https://jarvis.snam.it/public-data?lang=it
 
 
-#Formatto i file dei bilanci del gas
+#Formatto i file dei bilanci del gas in  milioni di Sm3 da PCS 10,57275 kWh/Sm3)
 
 #2021
 
 
-Bilancio_gen_21 = read_xls("bilancio_202101-IT.xls",1,range = "A14:AE44") 
+Bilancio_gen_21 = read_xls("bilancio_202101-IT.xls",3,range = "A14:AE45") 
 Bilancio_gen_21$GG=as.Date(Bilancio_gen_21$GG <- paste0('2021-01-', Bilancio_gen_21$GG))
-Bilancio_feb_21 = read_excel("bilancio_202102-IT.xls",1,range = "A14:AE44")  %>%
+Bilancio_feb_21 = read_excel("bilancio_202102-IT.xls",3,range = "A14:AE44")  %>%
   slice_head(n = 28)
 Bilancio_feb_21$GG=as.Date(Bilancio_feb_21$GG <- paste0('2021-02-', Bilancio_feb_21$GG))
-Bilancio_mar_21 = read_excel("bilancio_202103-IT.xls",1,range = "A14:AE44") 
+Bilancio_mar_21 = read_excel("bilancio_202103-IT.xls",3,range = "A14:AE45") 
 Bilancio_mar_21$GG=as.Date(Bilancio_mar_21$GG <- paste0('2021-03-', Bilancio_mar_21$GG))
-Bilancio_apr_21 = read_excel("bilancio_202104-IT.xls",1,range = "A14:AE44") 
+Bilancio_apr_21 = read_excel("bilancio_202104-IT.xls",3,range = "A14:AE44") 
 Bilancio_apr_21$GG=as.Date(Bilancio_apr_21$GG <- paste0('2021-04-', Bilancio_apr_21$GG))
-Bilancio_mag_21 = read_excel("bilancio_202105-IT.xls",1,range = "A14:AE44") 
+Bilancio_mag_21 = read_excel("bilancio_202105-IT.xls",3,range = "A14:AE45") 
 Bilancio_mag_21$GG=as.Date(Bilancio_mag_21$GG <- paste0('2021-05-', Bilancio_mag_21$GG))
-Bilancio_giu_21 = read_excel("bilancio_202106-IT.xls",1,range = "A14:AE44") 
+Bilancio_giu_21 = read_excel("bilancio_202106-IT.xls",3,range = "A14:AE44") 
 Bilancio_giu_21$GG=as.Date(Bilancio_giu_21$GG <- paste0('2021-06-', Bilancio_giu_21$GG))
-Bilancio_lug_21 = read_excel("bilancio_202107-IT.xls",1,range = "A14:AE44") 
+Bilancio_lug_21 = read_excel("bilancio_202107-IT.xls",3,range = "A14:AE45") 
 Bilancio_lug_21$GG=as.Date(Bilancio_lug_21$GG <- paste0('2021-07-', Bilancio_lug_21$GG))
-Bilancio_ago_21 = read_excel("bilancio_202108-IT.xls",1,range = "A14:AE44") 
+Bilancio_ago_21 = read_excel("bilancio_202108-IT.xls",3,range = "A14:AE45") 
 Bilancio_ago_21$GG=as.Date(Bilancio_ago_21$GG <- paste0('2021-08-', Bilancio_ago_21$GG))
-Bilancio_set_21 = read_excel("bilancio_202109-IT.xls",1,range = "A14:AE44") 
+Bilancio_set_21 = read_excel("bilancio_202109-IT.xls",3,range = "A14:AE44") 
 Bilancio_set_21$GG=as.Date(Bilancio_set_21$GG <- paste0('2021-09-', Bilancio_set_21$GG))
-Bilancio_ott_21 = read_excel("bilancio_202110-IT.xls",1,range = "A14:AE44") 
+Bilancio_ott_21 = read_excel("bilancio_202110-IT.xls",3,range = "A14:AE45") 
 Bilancio_ott_21$GG=as.Date(Bilancio_ott_21$GG <- paste0('2021-10-', Bilancio_ott_21$GG))
-Bilancio_nov_21 = read_excel("bilancio_202111-IT.xls",1,range = "A14:AE44") 
+Bilancio_nov_21 = read_excel("bilancio_202111-IT.xls",3,range = "A14:AE44") 
 Bilancio_nov_21$GG=as.Date(Bilancio_nov_21$GG <- paste0('2021-11-', Bilancio_nov_21$GG))
-Bilancio_dic_21 = read_excel("bilancio_202112-IT.xls",1,range = "A14:AE44") 
+Bilancio_dic_21 = read_excel("bilancio_202112-IT.xls",3,range = "A14:AE45") 
 Bilancio_dic_21$GG=as.Date(Bilancio_dic_21$GG <- paste0('2021-12-', Bilancio_dic_21$GG))
 
 #Unisco i file 2021
@@ -101,23 +101,23 @@ Bilancio_Gas_2021_Set = Bilancio_Gas_2021_Set %>%
 
 
 #2022
-Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",1,range = "A14:AE44") 
+Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",3,range = "A14:AE45") 
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
   
-Bilancio_febbraio_22 = read_xls("Bilancio_202202_14-IT.xls",1, range = "A14:AE44") %>%
+Bilancio_febbraio_22 = read_xls("Bilancio_202202_14-IT.xls",3, range = "A14:AE44") %>%
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22 = read_xls("bilancio_202203-IT.xls",1, range = "A14:AE44")
+Bilancio_marzo_22 = read_xls("bilancio_202203-IT.xls",3, range = "A14:AE45")
 Bilancio_marzo_22$GG=as.Date(Bilancio_marzo_22$GG <- paste0('2022-03-', Bilancio_marzo_22$GG))
 
-Bilancio_aprile_22 <- read_xls("Bilancio_202204-IT.xls",1, range = "A14:AE44")
+Bilancio_aprile_22 <- read_xls("Bilancio_202204-IT.xls",3, range = "A14:AE44")
 Bilancio_aprile_22$GG=as.Date(Bilancio_aprile_22$GG <- paste0('2022-04-', Bilancio_aprile_22$GG))
 
-Bilancio_maggio_22_prov <- read_xlsx("Bilancio_202205_14-IT_prov.xlsx",1, range = "A14:AE44")
+Bilancio_maggio_22_prov <- read_xlsx("Bilancio_202205_14-IT_prov.xlsx",3, range = "A14:AE45")
 Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05-', Bilancio_maggio_22_prov$GG))
 
-Bilancio_giugno_22_prov <- read_xlsx("Bilancio_202206_14-IT_prov.xlsx",1, range = "A14:AE44")
+Bilancio_giugno_22_prov <- read_xlsx("Bilancio_202206_14-IT_prov.xlsx",3, range = "A14:AE44")
 Bilancio_giugno_22_prov$GG=as.Date(Bilancio_giugno_22_prov$GG <- paste0('2022-06-', Bilancio_giugno_22_prov$GG))
 
 
@@ -150,6 +150,8 @@ Bilancio_Gas_21_22_Set = left_join(Bilancio_Gas_2021_Set,
 
 
 write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni gas")  
+
+
 
 #Dati energia elettrica
 #Fonte: https://www.terna.it/it/sistema-elettrico/transparency-report/download-center
