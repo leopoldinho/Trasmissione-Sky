@@ -88,6 +88,8 @@ my_data_selection_new= my_data_selection_new %>%
 
 write_sheet(my_data_selection_new, ss = Trasmissione_Sky, sheet = "Morti_lavoro")
 
+
+
 #controllare ultimi 6 mesi 2021: mancano dati
 
 
