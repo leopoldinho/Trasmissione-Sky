@@ -89,7 +89,9 @@ Bilancio_Gas_2021 = bind_rows(Bilancio_gen_21,Bilancio_feb_21,Bilancio_mar_21,
          "Entrata Mazara 21"="Entrata Mazara","Entrata P.Gries 21"="Entrata P.Gries",
          "Entrata Melendugno 21"="Entrata Melendugno","GNL Cavarzere 21"="GNL Cavarzere",
          "GNL Livorno 21"="GNL Livorno","GNL Panigaglia 21"="GNL Panigaglia",
-         "Prod Nazionale 21"="Produzione Nazionale","Sistemi di stoccaggio 21"="Sistemi di stoccaggio*")
+         "Prod Nazionale 21"="Produzione Nazionale","Sistemi di stoccaggio 21"="Sistemi di stoccaggio*") %>%
+  mutate(GNL_tot_21=Reduce("+",.[9:11]))
+  
 
 #Elaboro il conteggio per settimana 2021
 Bilancio_Gas_2021_Set =Bilancio_Gas_2021 %>% 
@@ -131,7 +133,8 @@ Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
          "Entrata Mazara 22"="Entrata Mazara","Entrata P.Gries 22"="Entrata P.Gries",
          "Entrata Melendugno 22"="Entrata Melendugno","GNL Cavarzere 22"="GNL Cavarzere",
          "GNL Livorno 22"="GNL Livorno","GNL Panigaglia 22"="GNL Panigaglia",
-         "Prod Nazionale 22"="Produzione Nazionale", "Sistemi di stoccaggio 22"="Sistemi di stoccaggio*")
+         "Prod Nazionale 22"="Produzione Nazionale", "Sistemi di stoccaggio 22"="Sistemi di stoccaggio*")%>%
+  mutate(GNL_tot_22=Reduce("+",.[9:11]))
 
 #Elaboro il conteggio per settimana 2022
 Bilancio_Gas_2022_Set =Bilancio_Gas_2022 %>% 
