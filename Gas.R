@@ -1,9 +1,14 @@
+remotes::install_github("krose/gie")
+
 library(devtools) 
 library(tidyverse)
 library(googlesheets4)
 library(readxl)
 library(lubridate)
-
+library(rjson)
+library(purrr)
+library(httr)
+library(gie)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -18,6 +23,11 @@ Trasmissione_Sky <- Sys.getenv("TRASMISSIONE_SKY_OUTPUT")
 if (Trasmissione_Sky == '') {
   Trasmissione_Sky <- "https://docs.google.com/spreadsheets/d/13QtJVyJDr8s-sWl0P44LDH394X_2z9ycg161Ptk7ias/edit#gid=0"
 }
+
+
+#API GIE
+
+Sys.setenv(GIE_PAT = "9ad7312d3330ea12138bbc52e5461717")
 
 
 #Scarico i file dei bilanci del Gas
@@ -219,3 +229,24 @@ Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
   mutate_if(is.numeric, round, 1)
 
 write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
+
+
+#Riserve GIE
+
+eu_lng <- gie_lng_aggregate("NL")
+
+nl <- gie_gas_date(date="2021-06-21::2022-07-21")
+
+riserve_gas <- fromJSON(file="https://agsi.gie.eu/api/data/DE", simplify = FALSE)
+
+res = GET("https://alsi.gie.eu/api/data/eu?till=2015-02-01", 
+          authenticate(" raffaele.mastrolonardo@gmail.com", "KWzsPiUPP98DPbu")
+)
+
+
+
+#API
+res = GET("https://dati.inail.it/api/OpenData/DatiConCadenzaSemestraleInfortuni",
+          query = list(Regione = "Abruzzo", AnnoAccadimento="2021",MeseAccadimento="7" ))
+
+
