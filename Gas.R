@@ -1,4 +1,5 @@
 remotes::install_github("krose/gie")
+install.packages("jsonlite")
 
 library(devtools) 
 library(tidyverse)
@@ -9,6 +10,7 @@ library(rjson)
 library(purrr)
 library(httr)
 library(gie)
+library(jsonlite)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -233,13 +235,30 @@ write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzio
 
 #Riserve GIE
 
+#package Gie
+
 eu_lng <- gie_lng_aggregate("NL")
 
-nl <- gie_gas_date(date="2021-06-21::2022-07-21")
+nl <- gie_gas_date(date = Sys.Date())
+
+#prove Api
+
+username = "raffaele.mastrolonardo@gmail.com"
+password = "KWzsPiUPP98DPbu"
+key= "9ad7312d3330ea12138bbc52e5461717"
+call = "https://agsi.gie.eu/api/data/DE"
+
+get_gas <- GET(call,add_headers(key))
+
+get_gas <- GET(call, authenticate(username, password, type='basic'), 
+               add_headers(Authorization=key))
+
+str(content(get_gas))
+
 
 riserve_gas <- fromJSON(file="https://agsi.gie.eu/api/data/DE", simplify = FALSE)
 
-res = GET("https://alsi.gie.eu/api/data/eu?till=2015-02-01", 
+res = GET("https://agsi.gie.eu/apikey=9ad7312d3330ea12138bbc52e5461717?continent=EU&page=1&size=30", 
           authenticate(" raffaele.mastrolonardo@gmail.com", "KWzsPiUPP98DPbu")
 )
 
