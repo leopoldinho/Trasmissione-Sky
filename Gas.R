@@ -1,4 +1,4 @@
-remotes::install_github("krose/gie")
+remotes::install_github("krose/gie", force=TRUE)
 install.packages("jsonlite")
 
 library(devtools) 
@@ -11,6 +11,7 @@ library(purrr)
 library(httr)
 library(gie)
 library(jsonlite)
+
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -234,38 +235,32 @@ write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzio
 
 
 #Riserve GIE
+#documentazione API: https://alsi.gie.eu/GIE_API_documentation_v004.pdf
 
-#package Gie
-
-eu_lng <- gie_lng_aggregate("NL")
-
-nl <- gie_gas_date(date = Sys.Date())
-
-#prove Api
-
+#Dati Api
 username = "raffaele.mastrolonardo@gmail.com"
 password = "KWzsPiUPP98DPbu"
 key= "9ad7312d3330ea12138bbc52e5461717"
-call = "https://agsi.gie.eu/api/data/DE"
+call = "https://agsi.gie.eu/api/data/nl?from=2021-01-01&limit=730"
 
-get_gas <- GET(call,add_headers(key))
+get_gas = GET(call, add_headers("x-key"=key))
 
-get_gas <- GET(call, authenticate(username, password, type='basic'), 
-               add_headers(Authorization=key))
+char = rawToChar(get_gas$content)
+df = jsonlite::fromJSON(char)
+df = bind_rows(df)
 
+
+#per vedere la struttura dle risultato scaricato
 str(content(get_gas))
 
 
-riserve_gas <- fromJSON(file="https://agsi.gie.eu/api/data/DE", simplify = FALSE)
-
-res = GET("https://agsi.gie.eu/apikey=9ad7312d3330ea12138bbc52e5461717?continent=EU&page=1&size=30", 
-          authenticate(" raffaele.mastrolonardo@gmail.com", "KWzsPiUPP98DPbu")
-)
 
 
 
-#API
-res = GET("https://dati.inail.it/api/OpenData/DatiConCadenzaSemestraleInfortuni",
-          query = list(Regione = "Abruzzo", AnnoAccadimento="2021",MeseAccadimento="7" ))
 
 
+#package Gie
+
+eu_lng <- gie_lng_aggregate("EU", data.frame=TRUE)
+
+ne <- gie_gas_aggregate("ne")
