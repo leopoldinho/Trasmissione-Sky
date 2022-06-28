@@ -244,6 +244,7 @@ call_de = "https://agsi.gie.eu/api/data/de?from=2021-01-01&limit=730"
 call_it = "https://agsi.gie.eu/api/data/it?from=2021-01-01&limit=730"
 call_eu = "https://agsi.gie.eu/api/data/eu?from=2021-01-01&limit=730"
 
+#Scarico i dati per DE, IT, UE
 riserve_de = GET(call_de, add_headers("x-key"=key))
 char = rawToChar(riserve_de$content)
 df = jsonlite::fromJSON(char)
@@ -259,6 +260,7 @@ char = rawToChar(riserve_eu$content)
 df = jsonlite::fromJSON(char)
 riserve_eu = bind_rows(df$data)
 
+#Aggrego tutti i dati
 riserve_tot=bind_rows(riserve_de,riserve_it,riserve_eu)%>%
   select(name,gasDayStart,gasInStorage,full)
 
@@ -266,11 +268,69 @@ riserve_tot$gasDayStart =as.Date(riserve_tot$gasDayStart)
 riserve_tot$gasInStorage =as.numeric(riserve_tot$gasInStorage)
 riserve_tot$full =as.numeric(riserve_tot$full)
 
+#Separo i dati per anno
 riserve_tot_2021 = riserve_tot%>%
   filter(gasDayStart<"2022-01-01")%>%
   rename(Riserve_2021=gasInStorage, Perc_2021=full)
 
-write_sheet(riserve_tot, ss = Trasmissione_Sky, sheet = "Riserve")  
+riserve_tot_2022 = riserve_tot%>%
+  filter(gasDayStart>"2021-12-31")%>%
+  rename(Riserve_2022=gasInStorage, Perc_2022=full)
+
+#Calcolo i dati per anno per le 3 aree geografiche
+riserve_IT_2021 = riserve_tot_2021 %>%
+  filter(name=="Italy") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2021=gasDayStart)
+
+riserve_IT_2022 = riserve_tot_2022 %>%
+  filter(name=="Italy") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2022=gasDayStart) %>%
+  select(-name)
+
+riserve_IT_21_22 = left_join(riserve_IT_2021,
+                             riserve_IT_2022,by="Giorno")
+
+riserve_De_2021 = riserve_tot_2021 %>%
+  filter(name=="Germany") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2021=gasDayStart)
+
+riserve_De_2022 = riserve_tot_2022 %>%
+  filter(name=="Germany") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2022=gasDayStart) %>%
+  select(-name)
+
+riserve_De_21_22 = left_join(riserve_De_2021,
+                             riserve_De_2022,by="Giorno")
+
+
+riserve_Ue_2021 = riserve_tot_2021 %>%
+  filter(name=="EU") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2021=gasDayStart)
+
+riserve_Ue_2022 = riserve_tot_2022 %>%
+  filter(name=="EU") %>%
+  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
+  arrange(Giorno) %>%
+  rename(Data_2022=gasDayStart) %>%
+  select(-name)
+
+riserve_Ue_21_22 = left_join(riserve_Ue_2021,
+                             riserve_Ue_2022,by="Giorno")
+
+
+riserve_tot_21_22 =bind_rows(riserve_IT_21_22, riserve_De_21_22, riserve_Ue_21_22)
+
+write_sheet(riserve_tot_21_22, ss = Trasmissione_Sky, sheet = "Riserve")  
 
 
 #per vedere la struttura dle risultato scaricato
