@@ -1,5 +1,5 @@
-remotes::install_github("krose/gie", force=TRUE)
-install.packages("jsonlite")
+
+
 
 library(devtools) 
 library(tidyverse)
@@ -9,7 +9,6 @@ library(lubridate)
 library(rjson)
 library(purrr)
 library(httr)
-library(gie)
 library(jsonlite)
 
 
@@ -241,13 +240,37 @@ write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzio
 username = "raffaele.mastrolonardo@gmail.com"
 password = "KWzsPiUPP98DPbu"
 key= "9ad7312d3330ea12138bbc52e5461717"
-call = "https://agsi.gie.eu/api/data/nl?from=2021-01-01&limit=730"
+call_de = "https://agsi.gie.eu/api/data/de?from=2021-01-01&limit=730"
+call_it = "https://agsi.gie.eu/api/data/it?from=2021-01-01&limit=730"
+call_eu = "https://agsi.gie.eu/api/data/eu?from=2021-01-01&limit=730"
 
-get_gas = GET(call, add_headers("x-key"=key))
-
-char = rawToChar(get_gas$content)
+riserve_de = GET(call_de, add_headers("x-key"=key))
+char = rawToChar(riserve_de$content)
 df = jsonlite::fromJSON(char)
-df = bind_rows(df)
+riserve_de = bind_rows(df$data)
+
+riserve_it = GET(call_it, add_headers("x-key"=key))
+char = rawToChar(riserve_it$content)
+df = jsonlite::fromJSON(char)
+riserve_it = bind_rows(df$data)
+
+riserve_eu = GET(call_eu, add_headers("x-key"=key))
+char = rawToChar(riserve_eu$content)
+df = jsonlite::fromJSON(char)
+riserve_eu = bind_rows(df$data)
+
+riserve_tot=bind_rows(riserve_de,riserve_it,riserve_eu)%>%
+  select(name,gasDayStart,gasInStorage,full)
+
+riserve_tot$gasDayStart =as.Date(riserve_tot$gasDayStart)
+riserve_tot$gasInStorage =as.numeric(riserve_tot$gasInStorage)
+riserve_tot$full =as.numeric(riserve_tot$full)
+
+riserve_tot_2021 = riserve_tot%>%
+  filter(gasDayStart<"2022-01-01")%>%
+  rename(Riserve_2021=gasInStorage, Perc_2021=full)
+
+write_sheet(riserve_tot, ss = Trasmissione_Sky, sheet = "Riserve")  
 
 
 #per vedere la struttura dle risultato scaricato
