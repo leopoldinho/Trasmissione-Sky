@@ -14,6 +14,7 @@ library(jsonlite)
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
 
 #Send to Google Spreadsheet
+
 if (google_auth_credentials != '') {
   gs4_auth(path = google_auth_credentials, scopes = "https://www.googleapis.com/auth/spreadsheets")
 } else {
