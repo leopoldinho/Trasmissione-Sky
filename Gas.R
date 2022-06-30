@@ -25,9 +25,6 @@ if (Trasmissione_Sky == '') {
 }
 
 
-#API GIE
-
-Sys.setenv(GIE_PAT = "9ad7312d3330ea12138bbc52e5461717")
 
 
 #Scarico i file dei bilanci del Gas
