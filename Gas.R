@@ -335,11 +335,6 @@ write_sheet(riserve_tot_21_22, ss = Trasmissione_Sky, sheet = "Riserve")
 str(content(get_gas))
 
 
-
-
-
-
-
 #package Gie
 
 eu_lng <- gie_lng_aggregate("EU", data.frame=TRUE)
