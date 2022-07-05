@@ -231,6 +231,7 @@ Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
 write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
 
 
+
 #Riserve GIE
 #documentazione API: https://alsi.gie.eu/GIE_API_documentation_v004.pdf
 
