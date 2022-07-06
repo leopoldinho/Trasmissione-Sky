@@ -1,4 +1,3 @@
-
 library(devtools) 
 library(tidyverse)
 library(googlesheets4)
@@ -8,7 +7,7 @@ library(rjson)
 library(purrr)
 library(httr)
 library(jsonlite)
-
+library(XLConnect)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -114,26 +113,36 @@ Bilancio_Gas_2021_Set = read.csv("https://raw.githubusercontent.com/leopoldinho/
                                  check.names = FALSE)
 
 #2022
-Bilancio_gennaio_22 = read_excel("Bilancio_202201-IT.xls",3,range = "A14:AE45") 
+Bilancio_gennaio_22 = readWorksheetFromFile("Bilancio_202201-IT.xls", sheet = 3, 
+                                            startCol = 1, startRow = 14, endCol = 31, endRow = 45)
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
+
+
+
   
-Bilancio_febbraio_22 = read_xls("Bilancio_202202-IT.xls",3, range = "A14:AE44") %>%
+Bilancio_febbraio_22 = readWorksheetFromFile("Bilancio_202202-IT.xls", sheet = 3, 
+                                            startCol = 1, startRow = 14, endCol = 31, endRow = 44) %>%
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22 = read_xls("bilancio_202203-IT.xls",3, range = "A14:AE45")
+Bilancio_marzo_22 = readWorksheetFromFile("Bilancio_202203-IT.xls", sheet = 3, 
+                                            startCol = 1, startRow = 14, endCol = 31, endRow = 44)
 Bilancio_marzo_22$GG=as.Date(Bilancio_marzo_22$GG <- paste0('2022-03-', Bilancio_marzo_22$GG))
 
-Bilancio_aprile_22 <- read_xls("Bilancio_202204-IT.xls",3, range = "A14:AE44")
+Bilancio_aprile_22 = readWorksheetFromFile("Bilancio_202204-IT.xls", sheet = 3, 
+                                          startCol = 1, startRow = 14, endCol = 31, endRow = 44)
 Bilancio_aprile_22$GG=as.Date(Bilancio_aprile_22$GG <- paste0('2022-04-', Bilancio_aprile_22$GG))
 
-Bilancio_maggio_22_prov <- read_xlsx("Bilancio_202205_14-IT_prov.xlsx",3, range = "A14:AE45")
+Bilancio_maggio_22_prov = readWorksheetFromFile("Bilancio_202205_14-IT_prov.xlsx", sheet = 3, 
+                                              startCol = 1, startRow = 14, endCol = 31, endRow = 45)
 Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05-', Bilancio_maggio_22_prov$GG))
 
-Bilancio_giugno_22_prov <- read_xlsx("Bilancio_202206_14-IT_prov.xlsx",3, range = "A14:AE44")
+Bilancio_giugno_22_prov = readWorksheetFromFile("Bilancio_202206_14-IT_prov.xlsx", sheet = 3, 
+                                                startCol = 1, startRow = 14, endCol = 31, endRow = 44)
 Bilancio_giugno_22_prov$GG=as.Date(Bilancio_giugno_22_prov$GG <- paste0('2022-06-', Bilancio_giugno_22_prov$GG))
 
-Bilancio_luglio_22_prov <- read_xlsx("Bilancio_202207_14-IT_prov.xlsx",3, range = "A14:AE45")
+Bilancio_luglio_22_prov = readWorksheetFromFile("Bilancio_202207_14-IT_prov.xlsx", sheet = 3, 
+                                                startCol = 1, startRow = 14, endCol = 31, endRow = 45)
 Bilancio_luglio_22_prov$GG=as.Date(Bilancio_luglio_22_prov$GG <- paste0('2022-07-', Bilancio_luglio_22_prov$GG))
 
 
@@ -141,13 +150,13 @@ Bilancio_luglio_22_prov$GG=as.Date(Bilancio_luglio_22_prov$GG <- paste0('2022-07
 #Unisco i file 2022
 Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
                               Bilancio_marzo_22,Bilancio_aprile_22,Bilancio_maggio_22_prov,
-                              Bilancio_giugno_22_prov)%>% 
-  select(GG, "2022"=Import., "Entrata Tarvisio 22"="Entrata Tarvisio",
-         "Entrata Gela 22"="Entrata Gela","Entrata Gorizia 22"="Entrata Gorizia",
-         "Entrata Mazara 22"="Entrata Mazara","Entrata P.Gries 22"="Entrata P.Gries",
-         "Entrata Melendugno 22"="Entrata Melendugno","GNL Cavarzere 22"="GNL Cavarzere",
-         "GNL Livorno 22"="GNL Livorno","GNL Panigaglia 22"="GNL Panigaglia",
-         "Prod Nazionale 22"="Produzione Nazionale", "Sistemi di stoccaggio 22"="Sistemi di stoccaggio*")%>%
+                              Bilancio_giugno_22_prov,Bilancio_luglio_22_prov)%>% 
+  select(GG, "2022"=Import., "Entrata Tarvisio 22"=Entrata.Tarvisio,
+         "Entrata Gela 22"=Entrata.Gela,"Entrata Gorizia 22"=Entrata.Gorizia,
+         "Entrata Mazara 22"=Entrata.Mazara,"Entrata P.Gries 22"=Entrata.P.Gries,
+         "Entrata Melendugno 22"=Entrata.Melendugno,"GNL Cavarzere 22"=GNL.Cavarzere,
+         "GNL Livorno 22"=GNL.Livorno,"GNL Panigaglia 22"=GNL.Panigaglia,
+         "Prod Nazionale 22"=Produzione.Nazionale, "Sistemi di stoccaggio 22"=Sistemi.di.stoccaggio.) %>%
   mutate(GNL_tot_22=Reduce("+",.[9:11]))
 
 #Elaboro il conteggio per settimana 2022
