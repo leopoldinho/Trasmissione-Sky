@@ -114,7 +114,7 @@ Bilancio_Gas_2021_Set = read.csv("https://raw.githubusercontent.com/leopoldinho/
                                  check.names = FALSE)
 
 #2022
-Bilancio_gennaio_22 = read_xls("Bilancio_202201-IT.xls",3,range = "A14:AE45") 
+Bilancio_gennaio_22 = read_excel("Bilancio_202201-IT.xls",3,range = "A14:AE45") 
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
   
 Bilancio_febbraio_22 = read_xls("Bilancio_202202-IT.xls",3, range = "A14:AE44") %>%
