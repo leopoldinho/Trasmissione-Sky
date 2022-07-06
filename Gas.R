@@ -183,7 +183,7 @@ write_sheet(Bilancio_Gas_21_22_Set, ss = Trasmissione_Sky, sheet = "Impostazioni
 #Fonte: https://www.terna.it/it/sistema-elettrico/transparency-report/download-center
 
 #Formatto i dati 2021
-Prod_Elet_2021 = read_xlsx("data_energia_elettrica_21.xlsx",1) %>% 
+Prod_Elet_2021 = readWorksheetFromFile("data_energia_elettrica_21.xlsx",sheet=1) %>% 
   slice(1:(n()-2)) %>%
   mutate(Giorno=yday(Date))
 
@@ -203,7 +203,7 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
   
 
 #Formatto i dati 2022
-Prod_Elet_2022 = read_xlsx("data_energia_elettrica_22.xlsx",1) %>% 
+Prod_Elet_2022 = readWorksheetFromFile("data_energia_elettrica_22.xlsx",sheet=1) %>% 
   slice(1:(n()-2)) %>%
   mutate(Giorno=yday(Date))
 
