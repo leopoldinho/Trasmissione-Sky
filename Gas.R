@@ -1,12 +1,14 @@
 library(devtools) 
 library(tidyverse)
 library(googlesheets4)
-library(readxl)
 library(lubridate)
-library(purrr)
 library(httr)
 library(jsonlite)
 library(XLConnect)
+library(purrr)
+
+
+library(readxl)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
