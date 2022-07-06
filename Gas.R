@@ -295,8 +295,8 @@ riserve_Ue_2021$Perc_2021 =as.numeric(riserve_Ue_2021$Perc_2021)
 
 #Scarico i dati 2022 per DE, IT, UE
 riserve_de = GET(call_de, add_headers("x-key"=key))
-char = rawToChar(riserve_de$content) #improvvisamente c'è un errore qui
-df = jsonlite::fromJSON(char)
+char = rawToChar(riserve_de$content) 
+df = jsonlite::fromJSON(char) #improvvisamente c'è un errore qui
 riserve_de = bind_rows(df$data)
 
 riserve_it = GET(call_it, add_headers("x-key"=key))
