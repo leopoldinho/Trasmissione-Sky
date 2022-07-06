@@ -6,7 +6,7 @@ library(httr)
 library(jsonlite)
 library(XLConnect)
 library(purrr)
-
+library(rjson)
 
 library(readxl)
 
@@ -270,7 +270,6 @@ riserve_IT_2021=riserve_IT_2021 %>%
   mutate(Perc_2021 = gsub(",", ".", Perc_2021))
 riserve_IT_2021$Perc_2021 =as.numeric(riserve_IT_2021$Perc_2021)
 
-
 riserve_DE_2021 = read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/Riserve_Gas_2021_DE.csv")
 riserve_DE_2021$Data_2021 =as.Date(riserve_DE_2021$Data_2021)
 
@@ -296,7 +295,7 @@ riserve_Ue_2021$Perc_2021 =as.numeric(riserve_Ue_2021$Perc_2021)
 
 #Scarico i dati 2022 per DE, IT, UE
 riserve_de = GET(call_de, add_headers("x-key"=key))
-char = rawToChar(riserve_de$content)
+char = rawToChar(riserve_de$content) #improvvisamente c'è un errore qui
 df = jsonlite::fromJSON(char)
 riserve_de = bind_rows(df$data)
 
