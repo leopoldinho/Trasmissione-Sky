@@ -8,8 +8,6 @@ library(XLConnect)
 library(purrr)
 library(rjson)
 
-library(readxl)
-
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
 
