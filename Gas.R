@@ -49,6 +49,7 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 #provvisori
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202205-IT.xlsx?raw=true", "Bilancio_202205_14-IT_prov.xlsx", mode="wb")
 download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202206-IT.xlsx?raw=true", "Bilancio_202206_14-IT_prov.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202207-IT.xlsx?raw=true", "Bilancio_202207_14-IT_prov.xlsx", mode="wb")
 
 
 
@@ -113,10 +114,10 @@ Bilancio_Gas_2021_Set = read.csv("https://raw.githubusercontent.com/leopoldinho/
                                  check.names = FALSE)
 
 #2022
-Bilancio_gennaio_22 = read_excel("Bilancio_202201_14-IT.xls",3,range = "A14:AE45") 
+Bilancio_gennaio_22 = read_xls("Bilancio_202201-IT.xls",3,range = "A14:AE45") 
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
   
-Bilancio_febbraio_22 = read_xls("Bilancio_202202_14-IT.xls",3, range = "A14:AE44") %>%
+Bilancio_febbraio_22 = read_xls("Bilancio_202202-IT.xls",3, range = "A14:AE44") %>%
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
@@ -131,6 +132,9 @@ Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05
 
 Bilancio_giugno_22_prov <- read_xlsx("Bilancio_202206_14-IT_prov.xlsx",3, range = "A14:AE44")
 Bilancio_giugno_22_prov$GG=as.Date(Bilancio_giugno_22_prov$GG <- paste0('2022-06-', Bilancio_giugno_22_prov$GG))
+
+Bilancio_luglio_22_prov <- read_xlsx("Bilancio_202207_14-IT_prov.xlsx",3, range = "A14:AE45")
+Bilancio_luglio_22_prov$GG=as.Date(Bilancio_luglio_22_prov$GG <- paste0('2022-07-', Bilancio_luglio_22_prov$GG))
 
 
 
@@ -235,15 +239,52 @@ write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzio
 #Riserve GIE
 #documentazione API: https://alsi.gie.eu/GIE_API_documentation_v004.pdf
 
-#Dati Api
+#Dati Api 2022
 username = "raffaele.mastrolonardo@gmail.com"
 password = "KWzsPiUPP98DPbu"
 key= "9ad7312d3330ea12138bbc52e5461717"
-call_de = "https://agsi.gie.eu/api/data/de?from=2021-01-01&limit=730"
-call_it = "https://agsi.gie.eu/api/data/it?from=2021-01-01&limit=730"
-call_eu = "https://agsi.gie.eu/api/data/eu?from=2021-01-01&limit=730"
+call_de = "https://agsi.gie.eu/api/data/de?from=2022-01-01&limit=730"
+call_it = "https://agsi.gie.eu/api/data/it?from=2022-01-01&limit=730"
+call_eu = "https://agsi.gie.eu/api/data/eu?from=2022-01-01&limit=730"
 
-#Scarico i dati per DE, IT, UE
+#Dati 2021
+
+riserve_IT_2021 = read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/Riserve_Gas_2021_IT.csv")
+riserve_IT_2021$Data_2021 =as.Date(riserve_IT_2021$Data_2021)
+
+riserve_IT_2021=riserve_IT_2021 %>%
+mutate(Riserve_2021 = gsub(",", ".", Riserve_2021))
+riserve_IT_2021$Riserve_2021 =as.numeric(riserve_IT_2021$Riserve_2021)
+
+riserve_IT_2021=riserve_IT_2021 %>%
+  mutate(Perc_2021 = gsub(",", ".", Perc_2021))
+riserve_IT_2021$Perc_2021 =as.numeric(riserve_IT_2021$Perc_2021)
+
+
+riserve_DE_2021 = read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/Riserve_Gas_2021_DE.csv")
+riserve_DE_2021$Data_2021 =as.Date(riserve_DE_2021$Data_2021)
+
+riserve_DE_2021=riserve_DE_2021 %>%
+  mutate(Riserve_2021 = gsub(",", ".", Riserve_2021))
+riserve_DE_2021$Riserve_2021 =as.numeric(riserve_DE_2021$Riserve_2021)
+
+riserve_DE_2021=riserve_DE_2021 %>%
+  mutate(Perc_2021 = gsub(",", ".", Perc_2021))
+riserve_DE_2021$Perc_2021 =as.numeric(riserve_DE_2021$Perc_2021)
+
+riserve_Ue_2021 = read.csv("https://raw.githubusercontent.com/leopoldinho/Trasmissione-Sky/main/Riserve_Gas_2021_UE.csv")
+riserve_Ue_2021$Data_2021 =as.Date(riserve_Ue_2021$Data_2021)
+
+riserve_Ue_2021=riserve_Ue_2021 %>%
+  mutate(Riserve_2021 = gsub(",", ".", Riserve_2021))
+riserve_Ue_2021$Riserve_2021 =as.numeric(riserve_Ue_2021$Riserve_2021)
+
+riserve_Ue_2021=riserve_Ue_2021 %>%
+  mutate(Perc_2021 = gsub(",", ".", Perc_2021))
+riserve_Ue_2021$Perc_2021 =as.numeric(riserve_Ue_2021$Perc_2021)
+
+
+#Scarico i dati 2022 per DE, IT, UE
 riserve_de = GET(call_de, add_headers("x-key"=key))
 char = rawToChar(riserve_de$content)
 df = jsonlite::fromJSON(char)
@@ -259,7 +300,7 @@ char = rawToChar(riserve_eu$content)
 df = jsonlite::fromJSON(char)
 riserve_eu = bind_rows(df$data)
 
-#Aggrego tutti i dati
+#Aggrego tutti i dati 2022
 riserve_tot=bind_rows(riserve_de,riserve_it,riserve_eu)%>%
   select(name,gasDayStart,gasInStorage,full)
 
@@ -267,22 +308,10 @@ riserve_tot$gasDayStart =as.Date(riserve_tot$gasDayStart)
 riserve_tot$gasInStorage =as.numeric(riserve_tot$gasInStorage)
 riserve_tot$full =as.numeric(riserve_tot$full)
 
-#Separo i dati per anno
-riserve_tot_2021 = riserve_tot%>%
-  filter(gasDayStart<"2022-01-01")%>%
-  rename(Riserve_2021=gasInStorage, Perc_2021=full)
-
 riserve_tot_2022 = riserve_tot%>%
-  filter(gasDayStart>"2021-12-31")%>%
   rename(Riserve_2022=gasInStorage, Perc_2022=full)
 
-#Calcolo i dati per anno per le 3 aree geografiche
-riserve_IT_2021 = riserve_tot_2021 %>%
-  filter(name=="Italy") %>%
-  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
-  arrange(Giorno) %>%
-  rename(Data_2021=gasDayStart)
-
+#Fromatto i dati per anno per le 3 aree geografiche
 riserve_IT_2022 = riserve_tot_2022 %>%
   filter(name=="Italy") %>%
   mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
@@ -293,28 +322,15 @@ riserve_IT_2022 = riserve_tot_2022 %>%
 riserve_IT_21_22 = left_join(riserve_IT_2021,
                              riserve_IT_2022,by="Giorno")
 
-riserve_De_2021 = riserve_tot_2021 %>%
-  filter(name=="Germany") %>%
-  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
-  arrange(Giorno) %>%
-  rename(Data_2021=gasDayStart)
-
-riserve_De_2022 = riserve_tot_2022 %>%
+riserve_DE_2022 = riserve_tot_2022 %>%
   filter(name=="Germany") %>%
   mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
   arrange(Giorno) %>%
   rename(Data_2022=gasDayStart) %>%
   select(-name)
 
-riserve_De_21_22 = left_join(riserve_De_2021,
-                             riserve_De_2022,by="Giorno")
-
-
-riserve_Ue_2021 = riserve_tot_2021 %>%
-  filter(name=="EU") %>%
-  mutate(Giorno = cut.Date(gasDayStart, breaks = "1 day", labels = FALSE))%>%
-  arrange(Giorno) %>%
-  rename(Data_2021=gasDayStart)
+riserve_DE_21_22 = left_join(riserve_DE_2021,
+                             riserve_DE_2022,by="Giorno")
 
 riserve_Ue_2022 = riserve_tot_2022 %>%
   filter(name=="EU") %>%
@@ -327,7 +343,7 @@ riserve_Ue_21_22 = left_join(riserve_Ue_2021,
                              riserve_Ue_2022,by="Giorno")
 
 
-riserve_tot_21_22 =bind_rows(riserve_IT_21_22, riserve_De_21_22, riserve_Ue_21_22)
+riserve_tot_21_22 =bind_rows(riserve_IT_21_22, riserve_DE_21_22, riserve_Ue_21_22)
 
 write_sheet(riserve_tot_21_22, ss = Trasmissione_Sky, sheet = "Riserve")  
 
