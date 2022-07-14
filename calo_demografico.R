@@ -49,7 +49,9 @@ geodata_nuts_2 = get_eurostat_geospatial(
 )
 
 
-#Scarico i dati sulla fertilit�
+
+
+#Scarico i dati sulla fertilità
 natalita_ue_nuts3=get_eurostat("demo_r_find3") 
 
 #Fertilita Paesi
@@ -63,6 +65,26 @@ fertilita_ue_andamento = natalita_ue_nuts3 %>%
   pivot_wider(names_from = geo, values_from = values)%>%
   arrange(time)
 
+
+#Statistiche varie su fertilità per PAese
+# the proportion of live births outside marriage
+# total fertility rate
+# the mean age of women at childbirth
+# the mean age of women at the birth of first / second / third / fourth and higher child
+# the median age of women at childbirth
+# the percentage of first / second / third / fourth and higher live births Fertility rates by age (demo_frate)
+
+stat_fertilita_ue=get_eurostat("demo_find") 
+
+#Statistiche aborti
+stat_aborti_ue=get_eurostat("demo_fabortind")
+
+#Eta mediana popolazione 
+#MEDAGEPOP: età mediana della popolazione
+#FMEDAGEPOP: età mediana pop femminile
+#MMEDAGEPOP: età mediana popolazione maschile
+
+eta_mediana_donne_ue=get_eurostat("demo_pjanind")
 
 #mappa eta' media madri e fertilita' province
 fertilita_ue_nuts3=natalita_ue_nuts3 %>%
