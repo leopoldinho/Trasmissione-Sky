@@ -84,7 +84,7 @@ stat_aborti_ue=get_eurostat("demo_fabortind")
 #FMEDAGEPOP: età mediana pop femminile
 #MMEDAGEPOP: età mediana popolazione maschile
 
-eta_mediana_donne_ue=get_eurostat("demo_pjanind")
+eta_mediana_ue=get_eurostat("demo_pjanind")
 
 #mappa eta' media madri e fertilita' province
 fertilita_ue_nuts3=natalita_ue_nuts3 %>%
