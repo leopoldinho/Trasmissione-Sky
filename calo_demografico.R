@@ -86,6 +86,13 @@ stat_aborti_ue=get_eurostat("demo_fabortind")
 
 eta_mediana_ue=get_eurostat("demo_pjanind")
 
+#Statostiche fertilità per regione e provincia
+#https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind2/default/table?lang=en
+#https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind3/default/table?lang=
+
+stat_eta_reg_ue=get_eurostat("DEMO_R_PJANIND3")
+
+
 #mappa eta' media madri e fertilita' province
 fertilita_ue_nuts3=natalita_ue_nuts3 %>%
   group_by(geo) %>%
