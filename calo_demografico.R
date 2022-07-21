@@ -17,7 +17,6 @@ library(geojsonio)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
-hg
 
 #Send to Google Spreadsheet
 if (google_auth_credentials != '') {
