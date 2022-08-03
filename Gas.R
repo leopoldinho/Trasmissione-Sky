@@ -208,8 +208,8 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
 
 #Formatto i dati 2022
 
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/data_energia_elettrica_22.xlsx?raw=true",
-              "data_energia_elettrica_22.xlsx", mode="wb")
+#download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/data_energia_elettrica_22.xlsx?raw=true",
+          #    "data_energia_elettrica_22.xlsx", mode="wb")
 
 Prod_Elet_2022 = readWorksheetFromFile("data_energia_elettrica_22.xlsx",sheet=1) %>% 
   slice(1:(n()-2)) %>%
