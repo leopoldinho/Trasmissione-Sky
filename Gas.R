@@ -8,7 +8,6 @@ library(XLConnect)
 library(purrr)
 library(rjson)
 
-install.packages("XLConnect")
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
