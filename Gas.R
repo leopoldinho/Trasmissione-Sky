@@ -45,10 +45,13 @@ download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/b
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202202-IT.xls", "Bilancio_202202-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202203-IT.xls", "bilancio_202203-IT.xls", mode="wb")
 download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202204-IT.xls", "bilancio_202204-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202205-IT.xls", "bilancio_202205-IT.xls", mode="wb")
+download.file("https://www.snam.it/exchange/quantita_gas_trasportato/andamento/bilancio_definitivo/2022/bilancio_202206-IT.xls", "bilancio_202206-IT.xls", mode="wb")
+
 #provvisori
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202205-IT.xlsx?raw=true", "Bilancio_202205_14-IT_prov.xlsx", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202206-IT .xlsx?raw=true", "Bilancio_202206_14-IT_prov.xlsx", mode="wb")
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202207-IT.xlsx?raw=true", "Bilancio_202207_14-IT_prov.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/Bilancio_202207_14-IT_prov.xlsx?raw=true", "Bilancio_202207_14-IT_prov.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/Bilancio_202208_14-IT_prov.xlsx?raw=true", "Bilancio_202208_14-IT_prov.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/bilancio_202209_14-IT_prov.xlsx?raw=true", "Bilancio_202209_14-IT_prov.xlsx", mode="wb")
 
 
 
@@ -117,40 +120,47 @@ Bilancio_gennaio_22 = readWorksheetFromFile("Bilancio_202201-IT.xls", sheet = 3,
                                             startCol = 1, startRow = 14, endCol = 31, endRow = 45)
 Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
 
-
-
-  
 Bilancio_febbraio_22 = readWorksheetFromFile("Bilancio_202202-IT.xls", sheet = 3, 
                                             startCol = 1, startRow = 14, endCol = 31, endRow = 44) %>%
   slice_head(n = 28)
 Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22 = readWorksheetFromFile("Bilancio_202203-IT.xls", sheet = 3, 
+Bilancio_marzo_22 = readWorksheetFromFile("bilancio_202203-IT.xls", sheet = 3, 
                                             startCol = 1, startRow = 14, endCol = 31, endRow = 44)
 Bilancio_marzo_22$GG=as.Date(Bilancio_marzo_22$GG <- paste0('2022-03-', Bilancio_marzo_22$GG))
 
-Bilancio_aprile_22 = readWorksheetFromFile("Bilancio_202204-IT.xls", sheet = 3, 
+Bilancio_aprile_22 = readWorksheetFromFile("bilancio_202204-IT.xls", sheet = 3, 
                                           startCol = 1, startRow = 14, endCol = 31, endRow = 44)
 Bilancio_aprile_22$GG=as.Date(Bilancio_aprile_22$GG <- paste0('2022-04-', Bilancio_aprile_22$GG))
 
-Bilancio_maggio_22_prov = readWorksheetFromFile("Bilancio_202205_14-IT_prov.xlsx", sheet = 3, 
+Bilancio_maggio_22 = readWorksheetFromFile("bilancio_202205-IT.xls", sheet = 3, 
                                               startCol = 1, startRow = 14, endCol = 31, endRow = 45)
-Bilancio_maggio_22_prov$GG=as.Date(Bilancio_maggio_22_prov$GG <- paste0('2022-05-', Bilancio_maggio_22_prov$GG))
+Bilancio_maggio_22$GG=as.Date(Bilancio_maggio_22$GG <- paste0('2022-05-', Bilancio_maggio_22$GG))
 
-Bilancio_giugno_22_prov = readWorksheetFromFile("Bilancio_202206_14-IT_prov.xlsx", sheet = 3, 
+
+Bilancio_giugno_22 = readWorksheetFromFile("bilancio_202206-IT.xls", sheet = 3, 
                                                 startCol = 1, startRow = 14, endCol = 31, endRow = 44)
-Bilancio_giugno_22_prov$GG=as.Date(Bilancio_giugno_22_prov$GG <- paste0('2022-06-', Bilancio_giugno_22_prov$GG))
+Bilancio_giugno_22$GG=as.Date(Bilancio_giugno_22$GG <- paste0('2022-06-', Bilancio_giugno_22$GG))
 
 Bilancio_luglio_22_prov = readWorksheetFromFile("Bilancio_202207_14-IT_prov.xlsx", sheet = 3, 
                                                 startCol = 1, startRow = 14, endCol = 31, endRow = 45)
 Bilancio_luglio_22_prov$GG=as.Date(Bilancio_luglio_22_prov$GG <- paste0('2022-07-', Bilancio_luglio_22_prov$GG))
 
+Bilancio_agosto_22_prov = readWorksheetFromFile("Bilancio_202208_14-IT_prov.xlsx", sheet = 3, 
+                                                startCol = 1, startRow = 14, endCol = 31, endRow = 45)
+Bilancio_agosto_22_prov$GG=as.Date(Bilancio_agosto_22_prov$GG <- paste0('2022-08-', Bilancio_agosto_22_prov$GG))
+
+Bilancio_sett_22_prov = readWorksheetFromFile("Bilancio_202209_14-IT_prov.xlsx", sheet = 3, 
+                                                startCol = 1, startRow = 14, endCol = 31, endRow = 44)
+Bilancio_sett_22_prov$GG=as.Date(Bilancio_sett_22_prov$GG <- paste0('2022-09-', Bilancio_sett_22_prov$GG))
+
 
 
 #Unisco i file 2022
 Bilancio_Gas_2022 = bind_rows(Bilancio_gennaio_22,Bilancio_febbraio_22,
-                              Bilancio_marzo_22,Bilancio_aprile_22,Bilancio_maggio_22_prov,
-                              Bilancio_giugno_22_prov,Bilancio_luglio_22_prov)%>% 
+                              Bilancio_marzo_22,Bilancio_aprile_22,Bilancio_maggio_22,
+                              Bilancio_giugno_22,Bilancio_luglio_22_prov,
+                              Bilancio_agosto_22_prov,Bilancio_sett_22_prov)%>% 
   select(GG, "2022"=Import., "Entrata Tarvisio 22"=Entrata.Tarvisio,
          "Entrata Gela 22"=Entrata.Gela,"Entrata Gorizia 22"=Entrata.Gorizia,
          "Entrata Mazara 22"=Entrata.Mazara,"Entrata P.Gries 22"=Entrata.P.Gries,
