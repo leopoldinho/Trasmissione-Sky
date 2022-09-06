@@ -228,7 +228,7 @@ Prod_Elet_2022$Date = as.Date (Prod_Elet_2022$Date)
 
 Prod_Elet_2022 = Prod_Elet_2022 %>% 
   pivot_wider(names_from=Primary.Source, 
-              values_from=Actual.Generation..GWh., values_fn = sum) %>% 
+              values_from=Actual.Generation..GWh., values_fn = sum) %>%
   mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
   arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
   group_by(Settimana) %>% summarise_all(sum) %>%
