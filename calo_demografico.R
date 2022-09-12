@@ -90,7 +90,6 @@ eta_mediana_ue=get_eurostat("demo_pjanind")
 #https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind2/default/table?lang=en
 #https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind3/default/table?lang=
 
-stat_eta_reg_ue=get_eurostat("DEMO_R_PJANIND3")
 
 
 #mappa eta' media madri e fertilita' province
