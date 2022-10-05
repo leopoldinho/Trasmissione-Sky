@@ -373,6 +373,16 @@ riserve_tot_21_22 =bind_rows(riserve_IT_21_22, riserve_DE_21_22, riserve_Ue_21_2
 write_sheet(riserve_tot_21_22, ss = Trasmissione_Sky, sheet = "Riserve")  
 
 
+#PREZZO GAS
+
+#si scarica da qui: https://it.investing.com/commodities/dutch-ttf-gas-c1-futures-historical-data?
+
+prezzo_gas =read.csv("Dutch TTF Natural Gas Futures Dati Storici.csv") 
+
+prezzo_gas$Data = as.Date(prezzo_gas$Data, format ="%d.%m.%Y")
+
+write_sheet(prezzo_gas, ss = Trasmissione_Sky, sheet = "Prezzo")  
+
 #per vedere la struttura dle risultato scaricato
 str(content(get_gas))
 
