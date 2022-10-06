@@ -25,7 +25,7 @@ if (Trasmissione_Sky == '') {
 }
 
 
-
+ma_b <- function(x, n = 7){stats::filter(x, rep(1 / n, n), sides = 1)} #Funzione per calcolare la media mobile
 
 #Scarico i file dei bilanci del Gas
 
@@ -382,6 +382,29 @@ prezzo_gas =read.csv("Dutch TTF Natural Gas Futures Dati Storici.csv")
 prezzo_gas$Data = as.Date(prezzo_gas$Data, format ="%d.%m.%Y")
 
 write_sheet(prezzo_gas, ss = Trasmissione_Sky, sheet = "Prezzo")  
+
+
+#Prezzo elettricità ingrosso
+#dati qui: https://ember-climate.org/
+
+prezzo_elettricita = read.csv("https://ember-climate.org/app/uploads/2022/09/european_wholesale_electricity_price_data_daily-1.csv") %>%
+  select(-X, -ISO3.Code) %>%
+  rename(Prezzo=Price..EUR.MWhe.)%>%
+  pivot_wider(names_from=Country, values_from=Prezzo) %>%
+  select(Date, France,Italy,Germany, Netherlands) %>%
+  mutate(Italia=as.numeric(ma_b(Italy)),
+         Francia=as.numeric(ma_b(France)),
+         Germania=as.numeric(ma_b(Germany)),
+         Francia=as.numeric(ma_b(France)),
+         Olanda=as.numeric(ma_b(Netherlands)))%>%
+  mutate_if(is.numeric, round, 2) %>%
+  mutate_all(~replace(., is.na(.), 0)) %>%
+  filter(Date>"2019-12-31")
+
+prezzo_elettricita$Date= as.Date(prezzo_elettricita$Date) 
+
+write_sheet(prezzo_elettricita, ss = Trasmissione_Sky, sheet = "Prezzo Elet")  
+
 
 #per vedere la struttura dle risultato scaricato
 str(content(get_gas))
