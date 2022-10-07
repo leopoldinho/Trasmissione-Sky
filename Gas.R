@@ -384,7 +384,7 @@ prezzo_gas$Data = as.Date(prezzo_gas$Data, format ="%d.%m.%Y")
 write_sheet(prezzo_gas, ss = Trasmissione_Sky, sheet = "Prezzo")  
 
 
-#Prezzo elettricità ingrosso
+#Prezzo elettricit? ingrosso
 #dati qui: https://ember-climate.org/
 
 prezzo_elettricita = read.csv("https://ember-climate.org/app/uploads/2022/09/european_wholesale_electricity_price_data_daily-1.csv") %>%
@@ -404,6 +404,16 @@ prezzo_elettricita = read.csv("https://ember-climate.org/app/uploads/2022/09/eur
 prezzo_elettricita$Date= as.Date(prezzo_elettricita$Date) 
 
 write_sheet(prezzo_elettricita, ss = Trasmissione_Sky, sheet = "Prezzo Elet")  
+
+prezzo_elettricita_mese = read.csv("https://ember-climate.org/app/uploads/2022/09/european_wholesale_electricity_price_data_monthly-1.csv") %>%
+  select(-X, -ISO3.Code) %>%
+  rename(Prezzo=Price..EUR.MWhe.)%>%
+  pivot_wider(names_from=Country, values_from=Prezzo) %>%
+  select(Date, France,Italy,Germany, Netherlands)
+
+
+write_sheet(prezzo_elettricita_mese, ss = Trasmissione_Sky, sheet = "Prezzo Elet Mese") 
+
 
 
 #per vedere la struttura dle risultato scaricato
