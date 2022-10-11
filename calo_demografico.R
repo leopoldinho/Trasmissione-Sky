@@ -129,5 +129,9 @@ proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
 write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
 write_sheet(fertilita_ue_andamento, ss = Trasmissione_Sky, sheet = "Fertilita_Ue_andamento")
 
+#popolazione
+pop_ue = get_eurostat("demo_pjangroup")
 
+#proiezione popolazione
+proj_pop_ue = get_eurostat("proj_19np")
 
