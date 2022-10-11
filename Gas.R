@@ -7,7 +7,7 @@ library(jsonlite)
 library(XLConnect)
 library(purrr)
 library(rjson)
-
+library(zoo)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -373,7 +373,7 @@ riserve_tot_21_22 =bind_rows(riserve_IT_21_22, riserve_DE_21_22, riserve_Ue_21_2
 write_sheet(riserve_tot_21_22, ss = Trasmissione_Sky, sheet = "Riserve")  
 
 
-#PREZZO GAS
+#PREZZO GAS EUROPA
 
 #si scarica da qui: https://it.investing.com/commodities/dutch-ttf-gas-c1-futures-historical-data?
 
@@ -384,7 +384,7 @@ prezzo_gas$Data = as.Date(prezzo_gas$Data, format ="%d.%m.%Y")
 write_sheet(prezzo_gas, ss = Trasmissione_Sky, sheet = "Prezzo")  
 
 
-#Prezzo elettricit? ingrosso
+#Prezzo elettricita' ingrosso Europa
 #dati qui: https://ember-climate.org/
 
 prezzo_elettricita = read.csv("https://ember-climate.org/app/uploads/2022/09/european_wholesale_electricity_price_data_daily-1.csv") %>%
@@ -416,12 +416,18 @@ write_sheet(prezzo_elettricita_mese, ss = Trasmissione_Sky, sheet = "Prezzo Elet
 
 
 
-#per vedere la struttura dle risultato scaricato
-str(content(get_gas))
+#Prezzo Gas italia (Arera)
 
+download.file("https://www.arera.it/allegati/dati/gas/gp27new.xlsx", "prezzi_gas.xlsx", mode = "wb")
+prezzi_gas_italia = readWorksheetFromFile("prezzi_gas.xlsx", sheet = 1, 
+                                          startCol = 1, startRow = 4, 
+                                          endCol = 6, endRow = 45) %>%
+  mutate_if(is.numeric, round, 2) %>%
+  rename(Periodo=Col1, "Spesa gas"=Spesa.per.materia.gas., "Spesa contatore"=Spesa.per.trasporto.e.gestione.del.contatore,
+         "Oneri di sistema"=Spesa.per.oneri.di.sistema) %>% 
+  slice(-1) %>% 
+  mutate(Periodo=seq(as.yearqtr("2014-01"),  length = nrow(prezzi_gas_italia), by = 1/4))
 
-#package Gie
+prezzi_gas_italia$Periodo = as.character(prezzi_gas_italia$Periodo)
 
-eu_lng <- gie_lng_aggregate("EU", data.frame=TRUE)
-
-ne <- gie_gas_aggregate("ne")
+write_sheet(prezzi_gas_italia, ss = Trasmissione_Sky, sheet = "Prezzo Gas Italia") 
