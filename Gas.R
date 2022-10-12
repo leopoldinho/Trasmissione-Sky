@@ -8,6 +8,7 @@ library(XLConnect)
 library(purrr)
 library(rjson)
 library(zoo)
+library(rvest)
 
 #Credentials
 google_auth_credentials <- Sys.getenv("GOOGLE_AUTH_CREDENTIALS")
@@ -431,3 +432,13 @@ prezzi_gas_italia = readWorksheetFromFile("prezzi_gas.xlsx", sheet = 1,
 prezzi_gas_italia$Periodo = as.character(prezzi_gas_italia$Periodo)
 
 write_sheet(prezzi_gas_italia, ss = Trasmissione_Sky, sheet = "Prezzo Gas Italia") 
+
+
+#Prova scraping gas
+
+webpage <- read_html("https://www.a2aenergia.eu/assistenza/tutela-cliente/indici/indice-psv")
+
+tbls <- html_table(webpage)
+
+Psv_mese = bind_rows(tbls)
+
