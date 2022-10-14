@@ -117,44 +117,106 @@ Bilancio_Gas_2021_Set = read.csv("https://raw.githubusercontent.com/leopoldinho/
                                  check.names = FALSE)
 
 #2022
-Bilancio_gennaio_22 = readWorksheetFromFile("Bilancio_202201-IT.xls", sheet = 3, 
-                                            startCol = 1, startRow = 14, endCol = 31, endRow = 45)
-Bilancio_gennaio_22$GG=as.Date(Bilancio_gennaio_22$GG <- paste0('2022-01-', Bilancio_gennaio_22$GG))
+Bilancio_gennaio_22 = readWorksheetFromFile(
+  "Bilancio_202201-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 45
+)
+Bilancio_gennaio_22$GG = as.Date(Bilancio_gennaio_22$GG <-
+                                   paste0('2022-01-', Bilancio_gennaio_22$GG))
 
-Bilancio_febbraio_22 = readWorksheetFromFile("Bilancio_202202-IT.xls", sheet = 3, 
-                                            startCol = 1, startRow = 14, endCol = 31, endRow = 44) %>%
+Bilancio_febbraio_22 = readWorksheetFromFile(
+  "Bilancio_202202-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 44
+) %>%
   slice_head(n = 28)
-Bilancio_febbraio_22$GG=as.Date(Bilancio_febbraio_22$GG <- paste0('2022-02-', Bilancio_febbraio_22$GG))
+Bilancio_febbraio_22$GG = as.Date(Bilancio_febbraio_22$GG <-
+                                    paste0('2022-02-', Bilancio_febbraio_22$GG))
 
-Bilancio_marzo_22 = readWorksheetFromFile("bilancio_202203-IT.xls", sheet = 3, 
-                                            startCol = 1, startRow = 14, endCol = 31, endRow = 44)
-Bilancio_marzo_22$GG=as.Date(Bilancio_marzo_22$GG <- paste0('2022-03-', Bilancio_marzo_22$GG))
+Bilancio_marzo_22 = readWorksheetFromFile(
+  "bilancio_202203-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 44
+)
+Bilancio_marzo_22$GG = as.Date(Bilancio_marzo_22$GG <-
+                                 paste0('2022-03-', Bilancio_marzo_22$GG))
 
-Bilancio_aprile_22 = readWorksheetFromFile("bilancio_202204-IT.xls", sheet = 3, 
-                                          startCol = 1, startRow = 14, endCol = 31, endRow = 44)
-Bilancio_aprile_22$GG=as.Date(Bilancio_aprile_22$GG <- paste0('2022-04-', Bilancio_aprile_22$GG))
+Bilancio_aprile_22 = readWorksheetFromFile(
+  "bilancio_202204-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 44
+)
+Bilancio_aprile_22$GG = as.Date(Bilancio_aprile_22$GG <-
+                                  paste0('2022-04-', Bilancio_aprile_22$GG))
 
-Bilancio_maggio_22 = readWorksheetFromFile("bilancio_202205-IT.xls", sheet = 3, 
-                                              startCol = 1, startRow = 14, endCol = 31, endRow = 45)
-Bilancio_maggio_22$GG=as.Date(Bilancio_maggio_22$GG <- paste0('2022-05-', Bilancio_maggio_22$GG))
+Bilancio_maggio_22 = readWorksheetFromFile(
+  "bilancio_202205-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 45
+)
+Bilancio_maggio_22$GG = as.Date(Bilancio_maggio_22$GG <-
+                                  paste0('2022-05-', Bilancio_maggio_22$GG))
 
 
-Bilancio_giugno_22 = readWorksheetFromFile("bilancio_202206-IT.xls", sheet = 3, 
-                                                startCol = 1, startRow = 14, endCol = 31, endRow = 44)
-Bilancio_giugno_22$GG=as.Date(Bilancio_giugno_22$GG <- paste0('2022-06-', Bilancio_giugno_22$GG))
+Bilancio_giugno_22 = readWorksheetFromFile(
+  "bilancio_202206-IT.xls",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 44
+)
+Bilancio_giugno_22$GG = as.Date(Bilancio_giugno_22$GG <-
+                                  paste0('2022-06-', Bilancio_giugno_22$GG))
 
-Bilancio_luglio_22_prov = readWorksheetFromFile("Bilancio_202207_14-IT_prov.xlsx", sheet = 3, 
-                                                startCol = 1, startRow = 14, endCol = 31, endRow = 45)
-Bilancio_luglio_22_prov$GG=as.Date(Bilancio_luglio_22_prov$GG <- paste0('2022-07-', Bilancio_luglio_22_prov$GG))
+Bilancio_luglio_22_prov = readWorksheetFromFile(
+  "Bilancio_202207_14-IT_prov.xlsx",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 45
+)
+Bilancio_luglio_22_prov$GG = as.Date(Bilancio_luglio_22_prov$GG <-
+                                       paste0('2022-07-', Bilancio_luglio_22_prov$GG))
 
-Bilancio_agosto_22_prov = readWorksheetFromFile("Bilancio_202208_14-IT_prov.xlsx", sheet = 3, 
-                                                startCol = 1, startRow = 14, endCol = 31, endRow = 45)
-Bilancio_agosto_22_prov$GG=as.Date(Bilancio_agosto_22_prov$GG <- paste0('2022-08-', Bilancio_agosto_22_prov$GG))
+Bilancio_agosto_22_prov = readWorksheetFromFile(
+  "Bilancio_202208_14-IT_prov.xlsx",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 45
+)
+Bilancio_agosto_22_prov$GG = as.Date(Bilancio_agosto_22_prov$GG <-
+                                       paste0('2022-08-', Bilancio_agosto_22_prov$GG))
 
-Bilancio_sett_22_prov = readWorksheetFromFile("Bilancio_202209_14-IT_prov.xlsx", sheet = 3, 
-                                                startCol = 1, startRow = 14, endCol = 31, endRow = 44)
-Bilancio_sett_22_prov$GG=as.Date(Bilancio_sett_22_prov$GG <- paste0('2022-09-', Bilancio_sett_22_prov$GG))
-
+Bilancio_sett_22_prov = readWorksheetFromFile(
+  "Bilancio_202209_14-IT_prov.xlsx",
+  sheet = 3,
+  startCol = 1,
+  startRow = 14,
+  endCol = 31,
+  endRow = 44
+)
+Bilancio_sett_22_prov$GG = as.Date(Bilancio_sett_22_prov$GG <-
+                                     paste0('2022-09-', Bilancio_sett_22_prov$GG))
 
 
 #Unisco i file 2022
