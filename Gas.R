@@ -504,3 +504,8 @@ tbls <- html_table(webpage)
 
 Psv_mese = bind_rows(tbls)
 
+#Prezzo combustibili (benzina, diesel, gasolio riscaldamento): MISE
+
+gas_benzina_set = read.csv("https://dgsaie.mise.gov.it/open_data_export.php?export-id=4&export-type=csv")
+
+write_sheet(gas_benzina_set, ss = Trasmissione_Sky, sheet = "Prezzo combustibili") 
