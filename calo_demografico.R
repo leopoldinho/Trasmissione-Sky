@@ -84,12 +84,19 @@ stat_aborti_ue=get_eurostat("demo_fabortind")
 #FMEDAGEPOP: età mediana pop femminile
 #MMEDAGEPOP: età mediana popolazione maschile
 
-eta_mediana_ue=get_eurostat("demo_pjanind")
+eta_mediana_ue=get_eurostat("demo_pjanind") DEMO_R_PJANIND3
 
 #Statostiche fertilità per regione e provincia
-#https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind2/default/table?lang=en
-#https://ec.europa.eu/eurostat/databrowser/view/demo_r_pjanind3/default/table?lang=
 
+
+eta_mediana_ue_prov=get_eurostat("demo_r_pjanind3") %>%
+  filter(indic_de=="MEDAGEPOP")%>%
+  filter(time>="2021-01-01")
+
+
+eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
+  filter(indic_de=="MEDAGEPOP")%>%
+  filter(time>="2021-01-01")
 
 
 #mappa eta' media madri e fertilita' province
@@ -102,7 +109,7 @@ fertilita_ue_nuts3_mappa=left_join(geodata, fertilita_ue_nuts3,
                                          by="NUTS_ID")
 
 fertilita_IT_nuts3_mappa = fertilita_ue_nuts3_mappa %>%
-  filter(CNTR_CODE=="IT")
+  filter(CNTR_CODE=="IT") 
 
 fertilita_ue_nuts3_mappa = geojson_write(fertilita_ue_nuts3_mappa, file="mappa_fertilita.geojson")
 
