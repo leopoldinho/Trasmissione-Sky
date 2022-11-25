@@ -135,3 +135,7 @@ pop_ue = get_eurostat("demo_pjangroup")
 #proiezione popolazione
 proj_pop_ue = get_eurostat("proj_19np")
 
+
+#mortalita eccesso
+
+mortalita_ex_ue =get_eurostat("demo_mexrt")
