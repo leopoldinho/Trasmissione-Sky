@@ -140,6 +140,7 @@ proj_pop_ue = get_eurostat("proj_19np")
 
 mortalita_ex_ue =get_eurostat("demo_mexrt") %>%
   pivot_wider(names_from = geo,
-              values_from = values)
+              values_from = values) %>%
+  arrange(time)
 
 write_sheet(mortalita_ex_ue, ss = Covid_Sky, sheet = "Ex mort Ue")
