@@ -151,3 +151,21 @@ mortalita_ex_ue =get_eurostat("demo_mexrt") %>%
   arrange(time)
 
 write_sheet(mortalita_ex_ue, ss = Covid_Sky, sheet = "Ex mort Ue")
+
+
+#Tutti i comuni
+
+popolazione_Comuni_tot = read.csv("Tutti i comuni per singola età (IT1,22_289_DF_DCIS_POPRES1_24,1.0) (1).csv")
+
+popolazione_Comuni = popolazione_Comuni_tot %>%
+  filter(AGE == "TOTAL", SEX == "9", OBS_VALUE > 150000) %>%
+  select(REF_AREA, TIME_PERIOD, OBS_VALUE) %>%
+  filter(!startsWith(REF_AREA, "IT")) %>%
+  filter(TIME_PERIOD != "2020", TIME_PERIOD != "2021") %>%
+  pivot_wider(names_from = TIME_PERIOD, values_from = OBS_VALUE, names_prefix = "a") %>%
+  mutate(Var_perc = (a2022 - a2019)/a2019*100) %>% 
+  mutate_if(is.numeric, round, 2) %>%
+  mutate(start=0)
+
+write.csv(popolazione_Comuni, "pop_grandi_comuni.csv")
+  
