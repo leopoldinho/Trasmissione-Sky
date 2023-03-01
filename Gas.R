@@ -280,10 +280,10 @@ Prod_Elet_2021 = Prod_Elet_2021 %>%
 
 #Formatto i dati 2022
 
-download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/data_energia_elettrica_22.xlsx?raw=true",
-              "data_energia_elettrica_22.xlsx", mode="wb")
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/data_energia_elettrica_22_def.xlsx?raw=true",
+              "data_energia_elettrica_22_def.xlsx", mode="wb")
 
-Prod_Elet_2022 = readWorksheetFromFile("data_energia_elettrica_22.xlsx",sheet=1) %>% 
+Prod_Elet_2022 = readWorksheetFromFile("data_energia_elettrica_22_def.xlsx",sheet=1) %>% 
   slice(1:(n()-2)) %>%
   mutate(Giorno=yday(Date))
 
@@ -322,6 +322,90 @@ Produzione_Elettrica_21_22 = Produzione_Elettrica_21_22%>%
   mutate_if(is.numeric, round, 1)
 
 write_sheet(Produzione_Elettrica_21_22, ss = Trasmissione_Sky, sheet = "Produzione elettrica")  
+
+#Formatto i dati 2023
+
+download.file("https://github.com/leopoldinho/Trasmissione-Sky/blob/main/data_energia_elettrica_23.xlsx?raw=true",
+              "data_energia_elettrica_23.xlsx", mode="wb")
+
+Prod_Elet_2023 = readWorksheetFromFile("data_energia_elettrica_23.xlsx",sheet=1) %>% 
+  slice(1:(n()-2)) %>%
+  mutate(Giorno=yday(Date))
+
+Prod_Elet_2023$Date = as.Date (Prod_Elet_2023$Date)
+
+Prod_Elet_2023 = Prod_Elet_2023 %>% 
+  pivot_wider(names_from=Primary.Source, 
+              values_from=Actual.Generation..GWh., values_fn = sum) %>%
+  mutate(Settimana = cut.Date(Date, breaks = "1 week", labels = FALSE)) %>% 
+  arrange(Date) %>% select(-Date) %>% mutate_if(is.numeric, round, 1)%>%
+  group_by(Settimana) %>% summarise_all(sum) %>%
+  slice_head(n = 53) %>%
+  rename("Geotermico_23"=Geothermal, "Idroelettrico_23"=Hydro,
+         "Fotovoltaico_23"=Photovoltaic, "Auto-consumo_23"="Self-consumption",
+         "Termico_23"=Thermal,"Eolico_23"=Wind) %>%
+  select(-Giorno)
+
+
+#Costruisco i dataset per le viz
+
+Produzione_Elettrica_21_23 = left_join(Prod_Elet_2021,
+                                       Prod_Elet_2023,by="Settimana")
+
+Produzione_Elettrica_21_23 = Produzione_Elettrica_21_23%>%
+  mutate(Diff_Termo_Perc=(Termico_23-Termico_21)/Termico_21*100,
+         Diff_Termo=(Termico_23-Termico_21),
+         Diff_Idro_Perc=(Idroelettrico_23-Idroelettrico_21)/Idroelettrico_21*100,
+         Diff_Idro=(Idroelettrico_23-Idroelettrico_21))%>% 
+  rename("Geotermico 21"="Geotermico_21", "Idroelettrico 21"="Idroelettrico_21",
+         "Fotovoltaico 21"="Fotovoltaico_21", "Auto-consumo 21"="Auto-consumo_21",
+         "Termoelettrico 21"="Termico_21","Eolico 21"="Eolico_21",
+         "Geotermico 23"="Geotermico_23", "Idroelettrico 23"="Idroelettrico_23",
+         "Fotovoltaico 23"="Fotovoltaico_23", "Auto-consumo 23"="Auto-consumo_23",
+         "Termoelettrico 23"="Termico_23","Eolico 23"="Eolico_23",
+         "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo,
+         "Idro Diff %"=Diff_Idro_Perc, "Diff Idro"=Diff_Idro) %>% 
+  mutate_if(is.numeric, round, 1)
+
+write_sheet(Produzione_Elettrica_21_23, ss = Trasmissione_Sky, sheet = "Produzione elettrica bis")  
+
+
+#Costruisco i dataset per le viz
+
+
+Produzione_Elettrica_22_23 = left_join(Prod_Elet_2022,
+                                       Prod_Elet_2023,by="Settimana")
+
+Produzione_Elettrica_22_23 = Produzione_Elettrica_22_23%>%
+  mutate(Diff_Termo_Perc=(Termico_23-Termico_22)/Termico_22*100,
+         Diff_Termo=(Termico_23-Termico_22),
+         Diff_Idro_Perc=(Idroelettrico_23-Idroelettrico_22)/Idroelettrico_22*100,
+         Diff_Idro=(Idroelettrico_23-Idroelettrico_22))%>% 
+  rename("Geotermico 22"="Geotermico_22", "Idroelettrico 22"="Idroelettrico_22",
+         "Fotovoltaico 22"="Fotovoltaico_22", "Auto-consumo 22"="Auto-consumo_22",
+         "Termoelettrico 22"="Termico_22","Eolico 22"="Eolico_22",
+         "Geotermico 23"="Geotermico_23", "Idroelettrico 23"="Idroelettrico_23",
+         "Fotovoltaico 23"="Fotovoltaico_23", "Auto-consumo 23"="Auto-consumo_23",
+         "Termoelettrico 23"="Termico_23","Eolico 23"="Eolico_23",
+         "Termo Diff %"=Diff_Termo_Perc,"Diff Termo"=Diff_Termo,
+         "Idro Diff %"=Diff_Idro_Perc, "Diff Idro"=Diff_Idro) %>% 
+  mutate_if(is.numeric, round, 1)
+
+write_sheet(Produzione_Elettrica_22_23, ss = Trasmissione_Sky, sheet = "Produzione elettrica tris")  
+
+
+
+write_sheet(Produzione_Elettrica_21_23, ss = Trasmissione_Sky, sheet = "Produzione elettrica bis")  
+
+#grafico 2021-22-23
+
+Produzione_Elettrica_21_22_23 = left_join(Prod_Elet_2021,
+                                       Prod_Elet_2022,by="Settimana")
+
+Produzione_Elettrica_21_22_23 = left_join(Produzione_Elettrica_21_22_23,
+                                         Prod_Elet_2023,by="Settimana")
+
+write_sheet(Produzione_Elettrica_21_22_23, ss = Trasmissione_Sky, sheet = "Produzione elettrica last")  
 
 
 
