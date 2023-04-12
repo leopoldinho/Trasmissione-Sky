@@ -11,6 +11,7 @@ library(sf)
 library(sp)
 library(geojsonR)
 library(geojsonio)
+library(countrycode)
 
 
 
@@ -57,7 +58,12 @@ natalita_ue_nuts3=get_eurostat("demo_r_find3")
 #Fertilita Paesi
 fertilita_ue_isto = natalita_ue_nuts3 %>%
   filter(str_length(geo) == 2) %>%
-  filter(time=="2020-01-01", indic_de=="TOTFERRT")
+  filter(time=="2021-01-01", indic_de=="TOTFERRT") %>% 
+  mutate(Paese = countrycode(geo, "eurostat", "country.name.it"))%>%
+  select(Paese, values, time)%>%
+  arrange(desc(values))
+
+write.csv2(fertilita_ue_isto, "fertilita_ue.csv")
 
 fertilita_ue_andamento = natalita_ue_nuts3 %>%
   filter(str_length(geo) == 2) %>%
@@ -89,12 +95,25 @@ stat_aborti_ue=get_eurostat("demo_fabortind")
 
 eta_mediana_ue_prov=get_eurostat("demo_r_pjanind3") %>%
   filter(indic_de=="MEDAGEPOP")%>%
-  filter(time>="2021-01-01")
+  filter(time>="2022-01-01")
 
 
 eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
   filter(indic_de=="MEDAGEPOP")%>%
-  filter(time>="2021-01-01")
+  filter(time>="2022-01-01")%>%
+  label_eurostat(
+  eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
+)
+
+
+prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
+  filter(indic_de=="PC_Y0_14")%>%
+  filter(time>="2022-01-01")%>%
+  label_eurostat(
+    eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
+  )
+
+
 
 
 #mappa eta' media madri e fertilita' province
