@@ -104,14 +104,17 @@ font = "SkyText"
 
 #età mediana
 
+#territori di oltremare
 oltremare=c("FRY1","FRY2","FRY3","FRY4","FRY5","ES70","PT20","PT30","NO0B")
 
+#unisco file geografico e dati
 eta_mediana_reg_mappa = left_join(geodata_nuts_2,
                                  eta_mediana_ue_reg,
                                  by = c("NUTS_ID"="geo_code")
                                  ) %>%
   filter(!NUTS_ID %in% oltremare)
 
+#realizzo la mappa
 eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
   ggplot(aes(fill = values))+ 
   geom_sf() + # Adding 'colour = NA' removes boundaries
@@ -119,7 +122,7 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
   
   #Opzioni di scale
   
-  scale_fill_viridis("values",option="magma") +
+  scale_fill_viridis("values",option="magma", direction= -1) +
   
   #scale_fill_met_c(
   #  "Hokusai2",
@@ -150,7 +153,7 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
         panel.border = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(color = "white", size = 0),
-        plot.title = element_text(size=18, color="grey30", hjust=0, vjust=0,family = font, face="bold"),
+        plot.title = element_text(size=20, color="grey30", hjust=0, vjust=0,family = font, face="bold"),
         plot.subtitle = element_text(size=14, color="grey30", hjust=0, vjust=0,family = font),
         plot.caption = element_text(size=8, color="grey30", hjust=0, vjust=0,family = font),
         axis.title.x = element_text(size=7, color="grey30", hjust=0, vjust=5,family = font),
@@ -166,7 +169,16 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
 
 eta_mediana_reg_mappa_choro
 
-
+#salvo la mappa
+map1 <- eta_mediana_reg_mappa_choro
+ggsave(
+  map1,
+  filename = "eta_mediana_ue.jpg",
+  width = 1500,
+  height = 1000,
+  units = "px",
+  bg="white", dpi = 140
+)
 
 
 #Altre mappe
