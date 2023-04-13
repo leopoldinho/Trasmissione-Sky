@@ -122,7 +122,7 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
   
   #Opzioni di scale
   
-  scale_fill_viridis("values",option="magma", direction= -1) +
+  scale_fill_viridis("values",option="magma", direction= -1) + #puoi specificare limiti con , limits=c(35,50)
   
   #scale_fill_met_c(
   #  "Hokusai2",
