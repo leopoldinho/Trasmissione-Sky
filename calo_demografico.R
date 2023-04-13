@@ -105,15 +105,16 @@ eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
   eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
 )
 
+write.csv2(eta_mediana_ue_reg, "eta_mediana_regioni_ue.csv")
 
 prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
   filter(indic_de=="PC_Y0_14")%>%
   filter(time>="2022-01-01")%>%
   label_eurostat(
-    eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
+    prop_pop_under_14,fix_duplicated = TRUE, code = "geo"
   )
 
-
+write.csv2(prop_pop_under_14, "under_14_regioni_ue.csv")
 
 
 #mappa eta' media madri e fertilita' province
@@ -147,7 +148,10 @@ fertilita_ue_nuts2_mappa = geojson_write(fertilita_ue_nuts2_mappa, file="mappa_f
 
 
 #proiezioni fertilita
-proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")
+proiezioni_fertilita_paesi =get_eurostat("proj_19naasfr")%>%
+  filter(age=="TOTAL")
+
+
 proiezioni_fertilita_province =get_eurostat("proj_19raasfr3")
 
 write_sheet(fertilita_ue_isto, ss = Trasmissione_Sky, sheet = "Fertilita_Ue")
@@ -157,8 +161,12 @@ write_sheet(fertilita_ue_andamento, ss = Trasmissione_Sky, sheet = "Fertilita_Ue
 pop_ue = get_eurostat("demo_pjangroup")
 
 #proiezione popolazione
-proj_pop_ue = get_eurostat("proj_19np")
+proj_pop_ue = get_eurostat("proj_19np", time_format = "raw")%>%
+  filter(age=="TOTAL" & sex=="T" & geo=="IT") %>%
+  pivot_wider(names_from = projection, values_from = values) %>%
+  arrange(time)
 
+write.csv2(proj_pop_ue, "proiez_pop.csv")
 
 #mortalita eccesso
 
