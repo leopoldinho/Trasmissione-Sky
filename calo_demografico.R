@@ -12,7 +12,8 @@ library(sp)
 library(geojsonR)
 library(geojsonio)
 library(countrycode)
-
+library(viridis)
+library(showtext)
 
 
 
@@ -50,8 +51,6 @@ geodata_nuts_2 = get_eurostat_geospatial(
 )
 
 
-
-
 #Scarico i dati sulla fertilità
 natalita_ue_nuts3=get_eurostat("demo_r_find3") 
 
@@ -65,38 +64,7 @@ fertilita_ue_isto = natalita_ue_nuts3 %>%
 
 write.csv2(fertilita_ue_isto, "fertilita_ue.csv")
 
-fertilita_ue_andamento = natalita_ue_nuts3 %>%
-  filter(str_length(geo) == 2) %>%
-  filter(indic_de=="TOTFERRT")%>%
-  pivot_wider(names_from = geo, values_from = values)%>%
-  arrange(time)
-
-
-#Statistiche varie su fertilità per PAese
-# the proportion of live births outside marriage
-# total fertility rate
-# the mean age of women at childbirth
-# the mean age of women at the birth of first / second / third / fourth and higher child
-# the median age of women at childbirth
-# the percentage of first / second / third / fourth and higher live births Fertility rates by age (demo_frate)
-
-stat_fertilita_ue=get_eurostat("demo_find") 
-
-#Statistiche aborti
-stat_aborti_ue=get_eurostat("demo_fabortind")
-
-#Eta mediana popolazione 
-#MEDAGEPOP: età mediana della popolazione
-#FMEDAGEPOP: età mediana pop femminile
-#MMEDAGEPOP: età mediana popolazione maschile
-
-#Statostiche fertilità per regione e provincia
-
-
-eta_mediana_ue_prov=get_eurostat("demo_r_pjanind3") %>%
-  filter(indic_de=="MEDAGEPOP")%>%
-  filter(time>="2022-01-01")
-
+#statistiche fertilità regione
 
 eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
   filter(indic_de=="MEDAGEPOP")%>%
@@ -107,6 +75,8 @@ eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
 
 write.csv2(eta_mediana_ue_reg, "eta_mediana_regioni_ue.csv")
 
+#statistiche pop under 14 regione
+
 prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
   filter(indic_de=="PC_Y0_14")%>%
   filter(time>="2022-01-01")%>%
@@ -116,7 +86,90 @@ prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
 
 write.csv2(prop_pop_under_14, "under_14_regioni_ue.csv")
 
+#proiezione popolazione
+proj_pop_ue = get_eurostat("proj_19np", time_format = "raw")%>%
+  filter(age=="TOTAL" & sex=="T" & geo=="IT") %>%
+  pivot_wider(names_from = projection, values_from = values) %>%
+  arrange(time)
 
+write.csv2(proj_pop_ue, "proiez_pop.csv")
+
+#MAPPE
+
+#font
+
+font_add("SkyText", "Sky-Text-Regular.ttf")
+showtext_auto()
+font = "SkyText"
+
+#età mediana
+
+oltremare=c("FRY1","FRY2","FRY3","FRY4","FRY5","ES70","PT20","PT30","NO0B")
+
+eta_mediana_reg_mappa = left_join(geodata_nuts_2,
+                                 eta_mediana_ue_reg,
+                                 by = c("NUTS_ID"="geo_code")
+                                 ) %>%
+  filter(!NUTS_ID %in% oltremare)
+
+eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
+  ggplot(aes(fill = values))+ 
+  geom_sf() + # Adding 'colour = NA' removes boundaries
+  #around each comune (lasciare solo geom_Sf se voglio far vedere i confini dei comuni)
+  
+  #Opzioni di scale
+  
+  scale_fill_viridis("values",option="magma") +
+  
+  #scale_fill_met_c(
+  #  "Hokusai2",
+  # override.order = TRUE,
+  #breaks = c(10000, 20000, 30000, 40000)) +
+  
+  #Apparato testuale
+  
+  labs(title = "Ue, le regioni più vecchie e quelle più giovani",
+       subtitle = "Età mediana (anno 2022)",
+       caption = "Fonte: Elaborazione Sky TG24 su dati Eurostat") +
+  guides(fill=guide_legend(
+    direction = "horizontal",
+    keyheight = unit(1.15, units = "mm"),
+    keywidth = unit(15, units = "mm"),
+    title.position = 'top',
+    title.hjust = 0.5,
+    label.hjust = .5,
+    nrow = 1,
+    byrow = T,
+    reverse = F,
+    label.position = "bottom"
+  ))+
+  theme_minimal() +
+  theme(panel.background = element_blank(),
+        legend.background = element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(color = "white", size = 0),
+        plot.title = element_text(size=18, color="grey30", hjust=0, vjust=0,family = font, face="bold"),
+        plot.subtitle = element_text(size=14, color="grey30", hjust=0, vjust=0,family = font),
+        plot.caption = element_text(size=8, color="grey30", hjust=0, vjust=0,family = font),
+        axis.title.x = element_text(size=7, color="grey30", hjust=0, vjust=5,family = font),
+        legend.text = element_text(size=8, color="grey30"),
+        legend.title = element_blank(),
+        strip.text = element_text(size=12),
+        #plot.margin = unit(c(5, 5, 5, 5), "mm"),
+        axis.title.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank()
+  )
+
+eta_mediana_reg_mappa_choro
+
+
+
+
+#Altre mappe
 #mappa eta' media madri e fertilita' province
 fertilita_ue_nuts3=natalita_ue_nuts3 %>%
   group_by(geo) %>%
@@ -194,3 +247,35 @@ popolazione_Comuni = popolazione_Comuni_tot %>%
 
 write.csv(popolazione_Comuni, "pop_grandi_comuni.csv")
   
+
+fertilita_ue_andamento = natalita_ue_nuts3 %>%
+  filter(str_length(geo) == 2) %>%
+  filter(indic_de=="TOTFERRT")%>%
+  pivot_wider(names_from = geo, values_from = values)%>%
+  arrange(time)
+
+
+#Statistiche varie su fertilità per PAese
+# the proportion of live births outside marriage
+# total fertility rate
+# the mean age of women at childbirth
+# the mean age of women at the birth of first / second / third / fourth and higher child
+# the median age of women at childbirth
+# the percentage of first / second / third / fourth and higher live births Fertility rates by age (demo_frate)
+
+stat_fertilita_ue=get_eurostat("demo_find") 
+
+#Statistiche aborti
+stat_aborti_ue=get_eurostat("demo_fabortind")
+
+#Eta mediana popolazione 
+#MEDAGEPOP: età mediana della popolazione
+#FMEDAGEPOP: età mediana pop femminile
+#MMEDAGEPOP: età mediana popolazione maschile
+
+#Statostiche fertilità per  provincia
+
+
+eta_mediana_ue_prov=get_eurostat("demo_r_pjanind3") %>%
+  filter(indic_de=="MEDAGEPOP")%>%
+  filter(time>="2022-01-01")
