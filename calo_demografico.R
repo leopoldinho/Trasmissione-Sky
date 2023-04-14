@@ -71,7 +71,8 @@ eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
   filter(time>="2022-01-01")%>%
   label_eurostat(
   eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
-)
+)%>%
+  arrange(desc(values))
 
 write.csv2(eta_mediana_ue_reg, "eta_mediana_regioni_ue.csv")
 
@@ -114,6 +115,8 @@ eta_mediana_reg_mappa = left_join(geodata_nuts_2,
                                  ) %>%
   filter(!NUTS_ID %in% oltremare)
 
+st_write(eta_mediana_reg_mappa, "eta_mediana.geojson")
+
 #realizzo la mappa
 eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
   ggplot(aes(fill = values))+ 
@@ -122,12 +125,12 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
   
   #Opzioni di scale
   
-  scale_fill_viridis("values",option="magma", direction= -1) + #puoi specificare limiti con , limits=c(35,50)
+  scale_fill_viridis("values",option="magma", direction= -1,limits=c(30,55)) + #puoi specificare limiti con , limits=c(30,50)
   
   #scale_fill_met_c(
-  #  "Hokusai2",
-  # override.order = TRUE,
-  #breaks = c(10000, 20000, 30000, 40000)) +
+   # "Hokusai2",
+   #override.order = TRUE,
+  #breaks = c(30, 35, 40, 45,50,55)) +
   
   #Apparato testuale
   
@@ -136,8 +139,8 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
        caption = "Fonte: Elaborazione Sky TG24 su dati Eurostat") +
   guides(fill=guide_legend(
     direction = "horizontal",
-    keyheight = unit(1.15, units = "mm"),
-    keywidth = unit(15, units = "mm"),
+    keyheight = unit(2, units = "mm"),
+    keywidth = unit(20, units = "mm"),
     title.position = 'top',
     title.hjust = 0.5,
     label.hjust = .5,
@@ -153,10 +156,10 @@ eta_mediana_reg_mappa_choro <- eta_mediana_reg_mappa  %>%
         panel.border = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(color = "white", size = 0),
-        plot.title = element_text(size=20, color="grey30", hjust=0, vjust=0,family = font, face="bold"),
-        plot.subtitle = element_text(size=14, color="grey30", hjust=0, vjust=0,family = font),
-        plot.caption = element_text(size=8, color="grey30", hjust=0, vjust=0,family = font),
-        axis.title.x = element_text(size=7, color="grey30", hjust=0, vjust=5,family = font),
+        plot.title = element_text(size=25, color="grey30", hjust=0, vjust=0,family = font, face="bold"),
+        plot.subtitle = element_text(size=16, color="grey30", hjust=0, vjust=0,family = font),
+        plot.caption = element_text(size=10, color="grey30", hjust=0, vjust=0,family = font),
+        axis.title.x = element_text(size=8, color="grey30", hjust=0, vjust=5,family = font),
         legend.text = element_text(size=8, color="grey30"),
         legend.title = element_blank(),
         strip.text = element_text(size=12),
@@ -173,9 +176,9 @@ eta_mediana_reg_mappa_choro
 map1 <- eta_mediana_reg_mappa_choro
 ggsave(
   map1,
-  filename = "eta_mediana_ue.jpg",
+  filename = "eta_mediana_ue_viridis.jpg",
   width = 1500,
-  height = 1000,
+  height = 1500,
   units = "px",
   bg="white", dpi = 140
 )
