@@ -95,6 +95,12 @@ proj_pop_ue = get_eurostat("proj_19np", time_format = "raw")%>%
 
 write.csv2(proj_pop_ue, "proiez_pop.csv")
 
+proj_pop_ue_over_60 = get_eurostat("proj_19np", time_format = "raw")%>%
+  filter(sex=="T" & geo=="IT") %>%
+  filter(age !="TOTAL")%>%
+  
+#sostituire Y_GE100   
+
 #MAPPE
 
 #font
