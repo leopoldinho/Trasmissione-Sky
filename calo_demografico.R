@@ -97,8 +97,33 @@ write.csv2(proj_pop_ue, "proiez_pop.csv")
 
 proj_pop_ue_over_60 = get_eurostat("proj_19np", time_format = "raw")%>%
   filter(sex=="T" & geo=="IT") %>%
-  filter(age !="TOTAL")%>%
-  
+  filter(age !="TOTAL")
+
+proj_pop_ue_over_60$age <- replace(proj_pop_ue_over_60$age, proj_pop_ue_over_60$age== "Y_GE100","Y100")
+proj_pop_ue_over_60$age <- replace(proj_pop_ue_over_60$age, proj_pop_ue_over_60$age== "Y_LT1","Y0")
+
+proj_pop_ue_over_60_a = proj_pop_ue_over_60 %>%
+  separate(age, c("Y","eta"), sep="Y") %>%
+  select(-Y) %>%
+  mutate(eta=as.numeric(eta))%>%
+  filter(eta>=60)%>%
+  group_by(projection, time) %>%
+  summarise(values_over=sum(values))
+
+proj_pop_ue_over_60_b = proj_pop_ue_over_60 %>%
+  separate(age, c("Y","eta"), sep="Y") %>%
+  select(-Y) %>%
+  mutate(eta=as.numeric(eta))%>%
+  filter(eta<60)%>%
+  group_by(projection, time) %>%
+  summarise(values_under=sum(values))%>%
+  ungroup()%>%
+  select(-projection, -time)
+
+proj_pop_ue_over_60_tot = bind_cols(proj_pop_ue_over_60_a,proj_pop_ue_over_60_b)
+
+write.csv2(proj_pop_ue_over_60_tot, "proiez_pop_over_60.csv")
+
 #sostituire Y_GE100   
 
 #MAPPE
