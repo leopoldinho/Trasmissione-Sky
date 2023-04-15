@@ -114,13 +114,18 @@ proj_pop_ue_over_60_b = proj_pop_ue_over_60 %>%
   separate(age, c("Y","eta"), sep="Y") %>%
   select(-Y) %>%
   mutate(eta=as.numeric(eta))%>%
-  filter(eta<60)%>%
+  #filter(eta<60)%>%
   group_by(projection, time) %>%
   summarise(values_under=sum(values))%>%
   ungroup()%>%
   select(-projection, -time)
 
-proj_pop_ue_over_60_tot = bind_cols(proj_pop_ue_over_60_a,proj_pop_ue_over_60_b)
+proj_pop_ue_over_60_tot = bind_cols(proj_pop_ue_over_60_a,proj_pop_ue_over_60_b)%>%
+  mutate(perc=values_over/values_under*100)%>% 
+  mutate_if(is.numeric, round, 1)%>%
+  mutate(perc_under=100-perc)%>%
+  rename("Over 60"=perc, "Under 60"=perc_under)
+  
 
 write.csv2(proj_pop_ue_over_60_tot, "proiez_pop_over_60.csv")
 
