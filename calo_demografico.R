@@ -14,7 +14,7 @@ library(geojsonio)
 library(countrycode)
 library(viridis)
 library(showtext)
-
+library(XLConnect)
 
 
 #Credentials
@@ -49,6 +49,7 @@ geodata_nuts_2 = get_eurostat_geospatial(
   crs = 4326,
   year = 2021
 )
+
 
 
 #Scarico i dati sulla fertilità
@@ -330,3 +331,14 @@ stat_aborti_ue=get_eurostat("demo_fabortind")
 eta_mediana_ue_prov=get_eurostat("demo_r_pjanind3") %>%
   filter(indic_de=="MEDAGEPOP")%>%
   filter(time>="2022-01-01")
+
+#### FRANCIA ####
+
+#Scarico file fertilit da WB
+download.file("https://api.worldbank.org/v2/en/indicator/SP.DYN.TFRT.IN?downloadformat=excel", "fertilita_WB.xls", mode="wb")
+fertilita_wb = read_xls("fertilita_WB.xls",1,range = "A4:BM270")
+
+#andamento popolzione
+
+download.file("https://api.worldbank.org/v2/en/indicator/SP.POP.TOTL?downloadformat=excel", "popolazione_WB.xls", mode="wb")
+pop_wb = read_xls("popolazione_WB.xls",1,range = "A4:BM270")
