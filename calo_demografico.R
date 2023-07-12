@@ -77,6 +77,18 @@ eta_mediana_ue_reg=get_eurostat("demo_r_pjanind2") %>%
 
 write.csv2(eta_mediana_ue_reg, "eta_mediana_regioni_ue.csv")
 
+#statistiche fertilità opaesi
+
+eta_mediana_ue_Pa=get_eurostat("demo_pjanind") %>%
+  filter(indic_de=="MEDAGEPOP")%>%
+  filter(time>="2022-01-01")%>%
+  label_eurostat(
+    eta_mediana_ue_reg,fix_duplicated = TRUE, code = "geo"
+  )%>%
+  arrange(desc(values))
+
+write_sheet(eta_mediana_ue_Pa, ss = Trasmissione_Sky, sheet = "Mediana_Ue")
+
 #statistiche pop under 14 regione
 
 prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
@@ -89,14 +101,14 @@ prop_pop_under_14=get_eurostat("demo_r_pjanind2") %>%
 write.csv2(prop_pop_under_14, "under_14_regioni_ue.csv")
 
 #proiezione popolazione
-proj_pop_ue = get_eurostat("proj_19np", time_format = "raw")%>%
+proj_pop_ue = get_eurostat("proj_23np", time_format = "raw")%>%
   filter(age=="TOTAL" & sex=="T" & geo=="IT") %>%
   pivot_wider(names_from = projection, values_from = values) %>%
   arrange(time)
 
 write.csv2(proj_pop_ue, "proiez_pop.csv")
 
-proj_pop_ue_over_60 = get_eurostat("proj_19np", time_format = "raw")%>%
+proj_pop_ue_over_60 = get_eurostat("proj_23np", time_format = "raw")%>%
   filter(sex=="T" & geo=="IT") %>%
   filter(age !="TOTAL")
 
