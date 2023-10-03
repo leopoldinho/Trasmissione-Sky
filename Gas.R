@@ -580,6 +580,22 @@ prezzi_gas_italia$Periodo = as.character(prezzi_gas_italia$Periodo)
 write_sheet(prezzi_gas_italia, ss = Trasmissione_Sky, sheet = "Prezzo Gas Italia") 
 
 
+#Prezzo Elettricità  italia (Arera)
+
+download.file("https://www.arera.it/allegati/dati/ele/eep35new.xlsx", "prezzi_elettricita.xlsx", mode = "wb")
+prezzi_elett_italia = readWorksheetFromFile("prezzi_elettricita.xlsx", sheet = 1, 
+                                          startCol = 1, startRow = 5, 
+                                          endCol = 6, endRow = 100) %>%
+  mutate_if(is.numeric, round, 2) %>%
+  rename(Periodo=Col1, "Spesa elettricita"=spesa.per.la.materia.energia, "Spesa contatore"=spesa.per.il.trasporto.e.la.gestione.del.contatore,
+         "Oneri di sistema"=spesa.per.oneri.di.sistema, Totale=Col6) %>% 
+  mutate(Periodo=seq(as.yearqtr("2004-01"),  length = nrow(prezzi_elett_italia), by = 1/4))
+
+prezzi_elett_italia$Periodo = as.character(prezzi_elett_italia$Periodo)
+
+write_sheet(prezzi_elett_italia, ss = Trasmissione_Sky, sheet = "Prezzo Elet Italia") 
+
+
 #Prova scraping gas
 
 webpage <- read_html("https://www.a2aenergia.eu/assistenza/tutela-cliente/indici/indice-psv")
