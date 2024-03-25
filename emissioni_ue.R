@@ -39,7 +39,7 @@ indirette = emissioni_ue %>%
 
 #somma emissioni
 emissioni_ue_GHG_sum = emissioni_ue_GHG %>% group_by(freq )%>% 
-  summarise(tot=sum(values))%>% select(tot)%>%
+  summarise(tot=sum(values))%>% select(tot)
   
 
 
