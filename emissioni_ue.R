@@ -11,7 +11,7 @@ totali= c("TOTX4_MEMO","TOTX4_MEMONIA","TOTX4_MEMONIT","TOTXMEMO","TOTXMEMONIA",
 
 #emissioni totali
 
-emissioni_ue_tot = emissioni_ue %>%
+emissioni_ue_tot_GHG = emissioni_ue %>%
   filter(src_crf %in% totali)%>%
   filter(airpol=="GHG") %>%
   filter(geo=="EU27_2020") %>%
@@ -34,16 +34,16 @@ indirette = emissioni_ue %>%
   filter(geo=="EU27_2020") %>%
   filter(TIME_PERIOD=="2021-01-01")%>%
   filter(unit=="THS_T")%>%
-  filter(src_crf=="CRF_INDCO2")%>%
-  select(values)
+  filter(src_crf=="CRF_INDCO2")
+
+#sommo l eemissioni indirette alle altre
+
+emissioni_ue_GHG = bind_rows(emissioni_ue_GHG,indirette)
 
 #somma emissioni
 emissioni_ue_GHG_sum = emissioni_ue_GHG %>% group_by(freq )%>% 
   summarise(tot=sum(values))%>% select(tot)
   
-
-
-
 
 #Legenda macro settori
 #[CRF1] Energy
@@ -75,3 +75,60 @@ emissioni_ue_GHG_trasporti = emissioni_ue %>%
 #[CRF1A3C] Fuel combustion in railways
 #[CRF1A3D] Fuel combustion in domestic navigation
 #[CRF1A3E] Fuel combustion in other transport
+
+
+#emissioni di C02
+
+
+
+emissioni_ue_tot_C02 = emissioni_ue %>%
+  filter(src_crf %in% totali)%>%
+  filter(airpol=="CO2") %>%
+  filter(geo=="EU27_2020") %>%
+  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(unit=="THS_T")
+
+#emissioni gas serra per macro settori
+emissioni_ue_CO2 = emissioni_ue %>%
+  filter(airpol=="CO2") %>%
+  filter(geo=="EU27_2020") %>%
+  filter(TIME_PERIOD=="2021-01-01")%>%
+  #filter(!(src_crf %in% totali))%>%
+  filter(unit=="THS_T")%>%
+  filter(str_length(src_crf) == 4)%>%
+  replace(is.na(.), 0)
+
+#estraggo le emissioni indirette
+indirette_CO2 = emissioni_ue %>%
+  filter(airpol=="CO2") %>%
+  filter(geo=="EU27_2020") %>%
+  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(unit=="THS_T")%>%
+  filter(src_crf=="CRF_INDCO2")
+
+#sommo l eemissioni indirette alle altre
+
+emissioni_ue_CO2 = bind_rows(emissioni_ue_CO2,indirette_CO2)
+
+#somma emissioni
+emissioni_ue_CO2_sum = emissioni_ue_CO2 %>% group_by(freq )%>% 
+  summarise(tot=sum(values))%>% select(tot)
+
+
+#Legenda macro settori
+#[CRF1] Energy
+#[CRF2] Industrial processes and product use
+#[CRF3] Agriculture
+#[CRF4] Land use, land use change, and forestry (LULUCF)
+#[CRF5] Waste management
+#[CRF6] Other sectors
+
+#emissioni settore trasporti
+
+emissioni_ue_CO2_trasporti = emissioni_ue %>%
+  filter(airpol=="CO2") %>%
+  filter(geo=="EU27_2020") %>%
+  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(!(src_crf %in% totali))%>%
+  filter(unit=="THS_T")%>%
+  filter(str_detect(src_crf, "^CRF1A3"))
