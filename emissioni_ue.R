@@ -15,14 +15,14 @@ emissioni_ue_tot_GHG = emissioni_ue %>%
   filter(src_crf %in% totali)%>%
   filter(airpol=="GHG") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(unit=="THS_T")
 
 #emissioni gas serra per macro settori
 emissioni_ue_GHG = emissioni_ue %>%
   filter(airpol=="GHG") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   #filter(!(src_crf %in% totali))%>%
   filter(unit=="THS_T")%>%
   filter(str_length(src_crf) == 4)%>%
@@ -32,7 +32,7 @@ emissioni_ue_GHG = emissioni_ue %>%
 indirette = emissioni_ue %>%
   filter(airpol=="GHG") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(unit=="THS_T")%>%
   filter(src_crf=="CRF_INDCO2")
 
@@ -58,7 +58,7 @@ emissioni_ue_GHG_sum = emissioni_ue_GHG %>% group_by(freq )%>%
 emissioni_ue_GHG_trasporti = emissioni_ue %>%
   filter(airpol=="GHG") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(!(src_crf %in% totali))%>%
   filter(unit=="THS_T")%>%
   filter(str_detect(src_crf, "^CRF1A3"))
@@ -85,14 +85,14 @@ emissioni_ue_tot_C02 = emissioni_ue %>%
   filter(src_crf %in% totali)%>%
   filter(airpol=="CO2") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(unit=="THS_T")
 
 #emissioni gas serra per macro settori
 emissioni_ue_CO2 = emissioni_ue %>%
   filter(airpol=="CO2") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   #filter(!(src_crf %in% totali))%>%
   filter(unit=="THS_T")%>%
   filter(str_length(src_crf) == 4)%>%
@@ -102,7 +102,7 @@ emissioni_ue_CO2 = emissioni_ue %>%
 indirette_CO2 = emissioni_ue %>%
   filter(airpol=="CO2") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(unit=="THS_T")%>%
   filter(src_crf=="CRF_INDCO2")
 
@@ -128,7 +128,7 @@ emissioni_ue_CO2_sum = emissioni_ue_CO2 %>% group_by(freq )%>%
 emissioni_ue_CO2_trasporti = emissioni_ue %>%
   filter(airpol=="CO2") %>%
   filter(geo=="EU27_2020") %>%
-  filter(TIME_PERIOD=="2021-01-01")%>%
+  filter(TIME_PERIOD=="2022-01-01")%>%
   filter(!(src_crf %in% totali))%>%
   filter(unit=="THS_T")%>%
   filter(str_detect(src_crf, "^CRF1A3"))
