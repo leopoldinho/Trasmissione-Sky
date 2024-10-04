@@ -102,9 +102,21 @@ write.csv2(prop_pop_under_14, "under_14_regioni_ue.csv")
 
 #proiezione popolazione
 proj_pop_ue = get_eurostat("proj_23np", time_format = "raw")%>%
-  filter(age=="TOTAL" & sex=="T" & geo=="IT") %>%
-  pivot_wider(names_from = projection, values_from = values) %>%
-  arrange(time)
+  filter(age=="TOTAL" & sex=="T")
+
+proiezioni_ue27 = proj_pop_ue %>%
+  filter(geo=="EU27_2020")%>%
+  select(projection, TIME_PERIOD, values)%>%
+  pivot_wider(names_from = projection, values_from = values)
+
+
+
+write.csv(proiezioni_ue27, "proiezioni_ue27.csv")
+
+proiezioni_italia = proj_pop_ue %>%
+  filter(geo=="IT")%>%
+  select(projection, TIME_PERIOD, values)%>%
+  pivot_wider(names_from = projection, values_from = values)
 
 write.csv2(proj_pop_ue, "proiez_pop.csv")
 
